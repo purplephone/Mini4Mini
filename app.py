@@ -44,5 +44,9 @@ from writing import writing_api
 
 app.register_blueprint(writing_api)
 
+from writing_update import writing_update_api
+
+app.register_blueprint(writing_update_api)
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080, debug=True)
