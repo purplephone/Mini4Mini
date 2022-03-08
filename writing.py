@@ -11,7 +11,7 @@ ca = certifi.where()
 client = MongoClient('mongodb+srv://test:sparta@cluster0.ldbjw.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
 db = client.dbsparta
 
-@writing_api.route('/write')
+@writing_api.route('/writing')
 def writing():
     writing_list = list(db.writing.find({}, {'_id': False}))
     return render_template('writing.html', writing_list=writing_list)
