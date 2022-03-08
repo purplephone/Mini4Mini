@@ -38,8 +38,8 @@
                         let date = rows[i]['date']
 
                         let tmpid = ``;
-                        let userId = `{{ user.id | safe }}`;
-                        if (nickname == userId) {
+                        let usernick = `{{ user.nickname | safe }}`;
+                        if (nickname == usernick) {
                             tmpid = `<div class="btn-group">
                                         <form action="/writing" method="get">
                                             <input name="id_give" id="writing${id}" type="hidden" value="${id}">
@@ -142,7 +142,7 @@
 
             <li class="nav-item mx-1">
                 <span class="fs-4">
-                    {{ user.id }}
+                    {{ user.nickname }}
                 </span>
             </li>
 
