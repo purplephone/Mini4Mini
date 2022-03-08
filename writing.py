@@ -17,7 +17,16 @@ SECRET_KEY = 'SPARTA'
 @writing_api.route('/writing')
 def writing():
     writing_list = list(db.writing.find({}, {'_id': False}))
-    return render_template('writing.html', writing_list=writing_list)
+    token_receive = request.cookies.get('mytoken')
+    try:
+        # 로그인 복호화
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        print(payload)
+        return render_template('writing.html', writing_list=writing_list)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login_api.login"))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login_api.login"))
 
 def getGCount():
     if not hasattr(g, 'count'):
