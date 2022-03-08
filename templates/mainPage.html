@@ -15,7 +15,7 @@
         {#테스트 코드, 사용안함#}
         {#$(document).ready(function () {#}
             {#$('#viewModal').modal();#}
-        {# });#}
+            {# });#}
 
         function test(){
             alert("stop click");
@@ -34,8 +34,15 @@
             $("#modalContent").text(writing.content);
         }
 
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/login"
+        }
+
 
     </script>
+
 </head>
 <body>
 <div class="container">
@@ -73,9 +80,9 @@
                     </svg>
                 </a>
             </li>
-
+            <!--로그아웃-->
             <li class="nav-item mx-1">
-                <a href="/logout" class="nav-link">
+                <a href = "/login" class="nav-link" onclick = "sign_out()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
                          class="bi bi-box-arrow-right" viewBox="0 0 16 16">
                         <path fill-rule="evenodd"
@@ -135,45 +142,45 @@
                 <button type="button" class="btn" id="callModalBtn" data-bs-toggle="modal" data-bs-target="#viewModal"
                         hidden="true"></button>
                 {% for writing in writing_list %}
-                    <!--글 시작-->
-                    <div class="col writing-card" onclick="callingModal({{ writing }})">
-                        <div class="container card shadow-sm">
-                            <!-- <div class="twit-img"><img class="bi m-0 p-0 bd-placeholder-img card-img-top" width="225"
-                                    height="225" fill="currentColor" src="img" alt="섬네일"></div> -->
-                            <img class="bi m-0 p-0 bd-placeholder-img card-img-top" width="300" height="150"
-                                 fill="currentColor"
-                                 src="static/card-image.svg">
+                <!--글 시작-->
+                <div class="col writing-card" onclick="callingModal({{ writing }})">
+                    <div class="container card shadow-sm">
+                        <!-- <div class="twit-img"><img class="bi m-0 p-0 bd-placeholder-img card-img-top" width="225"
+                                height="225" fill="currentColor" src="img" alt="섬네일"></div> -->
+                        <img class="bi m-0 p-0 bd-placeholder-img card-img-top" width="300" height="150"
+                             fill="currentColor"
+                             src="static/card-image.svg">
 
-                            <div class="card-body">
-                                <p class="card-text">
-                                    {{ writing.content }}
-                                </p>
+                        <div class="card-body">
+                            <p class="card-text">
+                                {{ writing.content }}
+                            </p>
 
-                                <p>
-                                    <small class="text-muted">YY:MM:DD:HH:mm<br>
+                            <p>
+                                <small class="text-muted">YY:MM:DD:HH:mm<br>
                                     {{ writing.nickname }}</small>
-                                </p>
+                            </p>
 
-                                {% if user.id == writing.nickname %}
+                            {% if user.id == writing.nickname %}
 
-                                    <div class="btn-group">
-                                        <button type="button"
-                                                class="btn btn-sm btn-outline-secondary post-delete" onclick="test()">Edit
-                                        </button>
-                                    </div>
-
-                                    <div class="btn-group" >
-                                        <button type="button"
-                                                class="btn btn-sm btn-outline-secondary post-delete" onclick="test()">Delete
-                                        </button>
-                                    </div>
-
-                                {% endif %}
-
+                            <div class="btn-group">
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-secondary post-delete" onclick="test()">Edit
+                                </button>
                             </div>
+
+                            <div class="btn-group" >
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-secondary post-delete" onclick="test()">Delete
+                                </button>
+                            </div>
+
+                            {% endif %}
+
                         </div>
                     </div>
-                    <!--글 끝-->
+                </div>
+                <!--글 끝-->
                 {% endfor %}
 
 
