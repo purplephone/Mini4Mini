@@ -101,7 +101,9 @@
                     console.log(response);
                     let writing = response['writing'];
                     document.getElementById("callModalBtn").click();
-                    $("#modalContent").text(writing['content']);
+                    {#중요함#}
+                    $("#modalContent").empty();
+                    $("#modalContent").append(writing['content']);
                     $("#modalTitle").text(writing['title']);
                     $("#modalDate").text(writing['date']);
                     $("#modalNickname").text(writing['nickname']);
