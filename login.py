@@ -65,11 +65,15 @@ def sign_up():
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
     nickname_receive = request.form['nickname_give']
+    phonenum_receive = request.form['phonenum_give']
+    email_receive = request.form['email_give']
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
-        "username": username_receive,                               # 아이디
+        "username": username_receive,
         "password": password_hash,
-        "nickname": nickname_receive
+        "nickname": nickname_receive,
+        "phone_num": phonenum_receive,
+        "email" : email_receive
     }
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
