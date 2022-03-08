@@ -185,11 +185,20 @@
 
 <!-- 본문 -->
 <div class="container">
-    <div class="row">
+    <div class="row justify-content-end">
 
         <!-- 필터링용 사이드바-->
-        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light col-3" style="width: 200px;">
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light col-3" >
             <span class="fs-4">Filter</span>
+            <hr>
+            <ul class="nav nav-pills ">
+                <li class="nav-item">
+                    <a href='javascript:void(0);' onclick="load_writing(``);" class="nav-link link-dark"
+                       aria-current="page">
+                        즐겨찾기
+                    </a>
+                </li>
+            </ul>
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
@@ -238,8 +247,27 @@
             <hr>
         </div>
 
-        <!--게시물 표시-->
-        <div class="album py-5 col-8">
+
+                <!--게시물 표시-->
+        <div class="album py-4 col-9">
+            <div class="mb-3">
+                <form action="/" method="GET" class="input-group">
+                    <div class="input-group-text">
+                        <span id="inputGroup-sizing-default">정렬 방법</span>
+                    </div>
+                    <div class="input-group-text">
+                        <input class="form-check-input mx-2" type="radio" name="sortMode" id="flexRadioDefault1"
+                               value="new" checked>
+                        <label class="form-check-label" for="flexRadioDefault1">최신순</label>
+                        <input class="form-check-input mx-2" type="radio" name="sortMode" id="flexRadioDefault2"
+                               value="old">
+                        <label class="form-check-label" for="flexRadioDefault2">과거순</label>
+                        <input class="form-check-input mx-2" type="radio" name="sortMode" id="flexRadioDefault3"
+                               value="like">
+                        <label class="form-check-label" for="flexRadioDefault3">추천순</label>
+                    </div>
+                </form>
+            </div>
             <button type="button" class="btn" id="callModalBtn" data-bs-toggle="modal" data-bs-target="#viewModal"
                     hidden="true"></button>
             <div id="cards-box" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
