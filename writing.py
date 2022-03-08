@@ -64,7 +64,7 @@ def writing_post():
 def writing_get():
     # db 가져오기
     search = request.args.get("search")
-    writing_list = list(db.writing.find({}, {'_id': False}))
+    writing_list = list(db.writing.find({}, {'_id': False}).sort("id", -1))
     # 필터 기능
     if search:
         print(search)
@@ -76,6 +76,10 @@ def writing_get():
             writing_list = list(db.writing.find({"category": "flask"}, {'_id': False}))
         elif search == "mongodb":
             writing_list = list(db.writing.find({"category": "mongodb"}, {'_id': False}))
+        elif search == "git":
+            writing_list = list(db.writing.find({"category": "git"}, {'_id': False}))
+        elif search == "management":
+            writing_list = list(db.writing.find({"category": "management"}, {'_id': False}))
     print(writing_list)
 
     return jsonify({'writing':writing_list})
