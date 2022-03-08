@@ -1,3 +1,4 @@
+import jwt
 import time
 from pymongo import MongoClient
 import certifi
@@ -11,10 +12,23 @@ ca = certifi.where()
 client = MongoClient('mongodb+srv://test:sparta@cluster0.ldbjw.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
 db = client.dbsparta
 
+SECRET_KEY = 'SPARTA'
+
+
 @writing_api.route('/writing')
 def writing():
     writing_list = list(db.writing.find({}, {'_id': False}))
-    return render_template('writing.html', writing_list=writing_list)
+    token_receive = request.cookies.get('mytoken')
+    try:
+        # 로그인 복호화
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        print(payload)
+        return render_template('writing.html', writing_list=writing_list)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login_api.login"))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login_api.login"))
+
 
 def getGCount():
     if not hasattr(g, 'count'):
@@ -24,13 +38,16 @@ def getGCount():
             g.count = g.count if g.count > i['id'] else i['id']
     return g.count
 
+
 @writing_api.route("/writing", methods=["POST"])
 def writing_post():
     # db 저장
     title_receive = request.form['title_give']
     content_receive = request.form['content_give']
     category_receive = request.form['category_give']
-    writing_list = list(db.writing.find({}, {'_id': False}))
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    print(payload)
 
     g.count = getGCount()
     g.count += 1
@@ -40,7 +57,7 @@ def writing_post():
         'content': content_receive,
         'category': category_receive,
         'date': time.strftime('%m-%d %H:%M'),
-        'nickname': 'nickname'
+        'nickname': payload['user']['nickname']
     }
     db.writing.insert_one(doc)
     return jsonify({'result': 'success', 'msg': '등록되었습니다.'})
@@ -50,21 +67,14 @@ def writing_post():
 def writing_get():
     # db 가져오기
     search = request.args.get("search")
-    writing_list = list(db.writing.find({}, {'_id': False}))
+    writing_list = list(db.writing.find({}, {'_id': False}).sort("id", -1))
     # 필터 기능
     if search:
-        print(search)
-        if search == "html":
-            writing_list = list(db.writing.find({"category": "html"}, {'_id': False}))
-        elif search == "javascript":
-            writing_list = list(db.writing.find({"category": "javascript"}, {'_id': False}))
-        elif search == "flask":
-            writing_list = list(db.writing.find({"category": "flask"}, {'_id': False}))
-        elif search == "mongodb":
-            writing_list = list(db.writing.find({"category": "mongodb"}, {'_id': False}))
+        writing_list = list(db.writing.find({"category": search}, {'_id': False}))
     print(writing_list)
 
     return jsonify({'writing':writing_list})
+
 
 @writing_api.route("/writing/get/<id>", methods=["GET"])
 def writing_get_one(id):
@@ -77,6 +87,7 @@ def writing_delete():
     id_receive = request.form['id_give']
     db.writing.delete_one({'id': int(id_receive)})
     return redirect("/")
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080, debug=True)
