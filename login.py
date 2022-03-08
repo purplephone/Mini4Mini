@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask import Blueprint
 
+
 login_api = Blueprint('login_api',__name__)
 from pymongo import MongoClient
 import certifi
@@ -50,7 +51,7 @@ def sign_in():
 
     if result is not None:
         payload = {
-         'id': username_receive,
+         'user': result,
          'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
