@@ -35,9 +35,14 @@ from login import login_api
 app.register_blueprint(login_api)
 
 # 임재현 수정
-from mainPage import mainPage_api
+from mainPage import mainPage
 
-app.register_blueprint(mainPage_api)
+app.register_blueprint(mainPage)
+
+# 김경래 수정
+from writing import writing_api
+
+app.register_blueprint(writing_api)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080, debug=True)
