@@ -1,3 +1,4 @@
+import jwt
 import time
 from pymongo import MongoClient
 import certifi
@@ -10,6 +11,8 @@ writing_api = Blueprint('writing_api', __name__)
 ca = certifi.where()
 client = MongoClient('mongodb+srv://test:sparta@cluster0.ldbjw.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
 db = client.dbsparta
+
+SECRET_KEY = 'SPARTA'
 
 @writing_api.route('/writing')
 def writing():
@@ -30,7 +33,9 @@ def writing_post():
     title_receive = request.form['title_give']
     content_receive = request.form['content_give']
     category_receive = request.form['category_give']
-    writing_list = list(db.writing.find({}, {'_id': False}))
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    print(payload)
 
     g.count = getGCount()
     g.count += 1
@@ -40,7 +45,7 @@ def writing_post():
         'content': content_receive,
         'category': category_receive,
         'date': time.strftime('%m-%d %H:%M'),
-        'nickname': 'nickname'
+        'nickname': payload['user']['nickname']
     }
     db.writing.insert_one(doc)
     return jsonify({'result': 'success', 'msg': '등록되었습니다.'})
