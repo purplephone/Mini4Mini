@@ -14,10 +14,10 @@
     <script>
         {#테스트 코드, 사용안함#}
         {#$(document).ready(function () {#}
-        {#$('#viewModal').modal();#}
+            {#$('#viewModal').modal();#}
         {# });#}
 
-        function test() {
+        function test(){
             alert("stop click");
             event.stopPropagation();
         }
@@ -29,6 +29,7 @@
         callModal.onclick = callingModal(writing);
 
         function callingModal(writing) {
+            alert(writing.content);
             document.getElementById("callModalBtn").click();
             $("#modalContent").text(writing.content);
             $("#modalTitle").text(writing.title);
@@ -46,7 +47,6 @@
 
 
     </script>
-
 </head>
 <body>
 <div class="container">
@@ -86,7 +86,7 @@
             </li>
             <!--로그아웃-->
             <li class="nav-item mx-1">
-                <a href="/login" class="nav-link" onclick="sign_out()">
+                <a href="/logout" class="nav-link">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
                          class="bi bi-box-arrow-right" viewBox="0 0 16 16">
                         <path fill-rule="evenodd"
@@ -162,7 +162,7 @@
 
                                 <p>
                                     <small class="text-muted">YY:MM:DD:HH:mm<br>
-                                        {{ writing.nickname }}</small>
+                                    {{ writing.nickname }}</small>
                                 </p>
 
                                 {% if user.id == writing.nickname %}
