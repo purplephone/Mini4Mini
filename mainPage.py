@@ -10,10 +10,6 @@ import certifi
 ca = certifi.where()
 # client = MongoClient('mongodb+srv://test:sparta@cluster0.hdgtj.mongodb.net/Cluster0?retryWrites=true&w=majority',
 #                      tlsCAFile=ca)
-# 테스트용
-client = MongoClient('mongodb+srv://root:root@cluster0.0wmzg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
-                     tlsCAFile=ca)
-db = client.dbsparta
 
 SECRET_KEY = 'SPARTA'
 

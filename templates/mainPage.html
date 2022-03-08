@@ -42,14 +42,14 @@
                         if (nickname == userId) {
                             tmpid = `<div class="btn-group">
                                         <form action="/writing" method="get">
-                                            <input name="writing" id="writing${id}" type="hidden" value="${rows[i]}">
+                                            <input name="writing" id="writing${id}" type="hidden" value="${id}">
                                             <button type="submit"
                                                     class="btn btn-sm btn-outline-secondary" onclick="stop()">Edit
                                             </button>
                                         </form>
 
                                         <form action="/writing/delete" method="post">
-                                            <input name="writing" type="hidden" value="${rows[i]}">
+                                            <input name="writing" type="hidden" value="${id}">
                                             <button type="button"
                                                     class="btn btn-sm btn-outline-secondary" onclick="stop()">Delete
                                             </button>
@@ -57,7 +57,7 @@
                                     </div>`;
                         }
 
-                        let temp_html = `<div class="col writing-card" onclick="callingModal(${rows[i]})">
+                        let temp_html = `<div class="col writing-card" onclick="callingModal(${id})">
                         <div class="container card shadow-sm">
                             <img class="bi m-0 p-0 bd-placeholder-img card-img-top" width="300" height="150"
                                  fill="currentColor"
@@ -90,11 +90,20 @@
     </script>
 
     <script>
-        function callingModal(writing) {
-            alert(writing.content);
-            document.getElementById("callModalBtn").click();
-            $("#modalContent").text(writing.content);
-            $("#modalTitle").text(writing.title);
+        function callingModal(id) {
+            url = `/writing/get/${id}`;
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: {},
+                success: function (response) {
+                    console.log(response);
+                    let writing = response['writing'];
+                    document.getElementById("callModalBtn").click();
+                    $("#modalContent").text(writing['content']);
+                    $("#modalTitle").text(writing['title']);
+                }
+            })
         }
 
         function stop() {

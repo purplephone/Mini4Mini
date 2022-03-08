@@ -45,9 +45,11 @@ def writing_post():
     db.writing.insert_one(doc)
     return jsonify({'result': 'success', 'msg': '등록되었습니다.'})
 
+
 @writing_api.route("/writing/get", methods=["GET"])
 def writing_get():
     # db 가져오기
+    search = request.args.get("search")
     writing_list = list(db.writing.find({}, {'_id': False}))
     # 필터 기능
     if search:
@@ -64,8 +66,15 @@ def writing_get():
 
     return jsonify({'writing':writing_list})
 
+@writing_api.route("/writing/get/<id>", methods=["GET"])
+def writing_get_one(id):
+    writingOne = db.writing.find_one({'id': int(id)}, {'_id': False})
+    return jsonify({'writing': writingOne})
+
+
 @writing_api.route("/writing/delete", methods=["POST"])
 def writing_delete():
+    print(request.form)
     id_receive = request.form['id_give']
     print(id_receive)
     db.writing.delete_one({'id': int(id_receive)})
