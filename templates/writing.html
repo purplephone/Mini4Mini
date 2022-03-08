@@ -120,7 +120,7 @@
                                             <div class="card h-100">
                                                 <img src="https://media.vlpt.us/images/jqdjhy/post/c1225a25-b178-4ece-9af6-926e876195d1/HTML&CSS.png"
                                                      class="card-img-top">
-                                                     <button onclick="deleted(${id})" type="button" class="btn btn-danger">x</button>
+                                                     <button onclick="delete_writing(${id})" type="button" class="btn btn-danger">x</button>
                                                 <div class="card-body">
                                                     <h5 class="card-title">${title}</h5>
                                                     <p class="card-text">${content}</p>
@@ -133,7 +133,7 @@
                                             <div class="card h-100">
                                                 <img src="https://media.vlpt.us/images/new_wisdom/post/4a0259ee-b980-484b-8bf4-25eb4705459f/flask.png"
                                                      class="card-img-top">
-                                                     <button onclick="deleted(${id})" type="button" class="btn btn-danger">x</button>
+                                                     <button onclick="delete_writing(${id})" type="button" class="btn btn-danger">x</button>
                                                 <div class="card-body">
                                                     <h5 class="card-title">${title}</h5>
                                                     <p class="card-text">${content}</p>
@@ -146,7 +146,7 @@
                                             <div class="card h-100">
                                                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/1200px-Unofficial_JavaScript_logo_2.svg.png"
                                                      class="card-img-top">
-                                                     <button onclick="deleted(${id})" type="button" class="btn btn-danger">x</button>
+                                                     <button onclick="delete_writing(${id})" type="button" class="btn btn-danger">x</button>
                                                 <div class="card-body">
                                                     <h5 class="card-title">${title}</h5>
                                                     <p class="card-text">${content}</p>
@@ -159,7 +159,7 @@
                                             <div class="card h-100">
                                                 <img src="https://media.vlpt.us/images/gparkkii/post/0e227a36-2951-41c0-a408-a2173863ea3a/MongoDB-Logo.wine.png?w=768"
                                                      class="card-img-top">
-                                                     <button onclick="deleted(${id})" type="button" class="btn btn-danger">x</button>
+                                                     <button onclick="delete_writing(${id})" type="button" class="btn btn-danger">x</button>
                                                 <div class="card-body">
                                                     <h5 class="card-title">${title}</h5>
                                                     <p class="card-text">${content}</p>
@@ -176,22 +176,20 @@
             })
         }
 
-        function delete_writing(id){
-            $.ajax({
-                type: 'POST',
-                url: '/writing/delete',
-                data: {id_give: id},
-                success: function (response) {
-                    alert(response['msg'])
-                    {#메인페이지로 이동#}
-                    window.location.href = "/"
-                }
-            })
-        }
-
-        function deleted(){
-            if(confirm('삭제하시겠습니까??')){
-                delete_writing()
+        function delete_writing(id) {
+            console.log(id)
+            if (confirm('삭제하시겠습니까?')) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/writing/delete',
+                    data: {id_give: id},
+                    success: function (response) {
+                        console.log(response)
+                        alert(response['msg'])
+                        {#메인페이지로 이동#}
+                        window.location.href = "/"
+                    }
+                })
             }
         }
     </script>

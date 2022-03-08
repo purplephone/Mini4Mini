@@ -16,7 +16,15 @@ def writing():
     writing_list = list(db.writing.find({}, {'_id': False}))
     return render_template('writing.html', writing_list=writing_list)
 
-@writing_api.route("/writing/post", methods=["POST"])
+def getGCount():
+    if not hasattr(g, 'count'):
+        g.count = 0
+        writing_list = list(db.writing.find({}, {'_id': False}))
+        for i in writing_list:
+            g.count = g.count if g.count > i['id'] else i['id']
+    return g.count
+
+@writing_api.route("/writing", methods=["POST"])
 def writing_post():
     # db 저장
     title_receive = request.form['title_give']
@@ -24,7 +32,7 @@ def writing_post():
     category_receive = request.form['category_give']
     writing_list = list(db.writing.find({}, {'_id': False}))
 
-    g.count = len(writing_list) + 1
+    g.count = getGCount()
     g.count += 1
     doc = {
         'id': getattr(g, "count", 0),
@@ -39,7 +47,7 @@ def writing_post():
 
 @writing_api.route("/writing/get", methods=["GET"])
 def writing_get():
-    search = request.args.get('search')
+    # db 가져오기
     writing_list = list(db.writing.find({}, {'_id': False}))
     # 필터 기능
     if search:
@@ -58,7 +66,6 @@ def writing_get():
 
 @writing_api.route("/writing/delete", methods=["POST"])
 def writing_delete():
-    print(1111)
     id_receive = request.form['id_give']
     print(id_receive)
     db.writing.delete_one({'id': int(id_receive)})
