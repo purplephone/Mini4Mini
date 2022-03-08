@@ -1,7 +1,7 @@
 import time
 from pymongo import MongoClient
 import certifi
-from flask import Flask, render_template, request, jsonify, g, Blueprint
+from flask import Flask, render_template, request, jsonify, g, Blueprint, redirect, url_for
 
 app = Flask(__name__)
 
@@ -74,11 +74,9 @@ def writing_get_one(id):
 
 @writing_api.route("/writing/delete", methods=["POST"])
 def writing_delete():
-    print(request.form)
     id_receive = request.form['id_give']
-    print(id_receive)
     db.writing.delete_one({'id': int(id_receive)})
-    return jsonify({'result': 'success', 'msg': '삭제되었습니다.'})
+    return redirect("/")
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080, debug=True)
