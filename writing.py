@@ -14,6 +14,7 @@ db = client.dbsparta
 
 SECRET_KEY = 'SPARTA'
 
+
 @writing_api.route('/writing')
 def writing():
     writing_list = list(db.writing.find({}, {'_id': False}))
@@ -28,6 +29,7 @@ def writing():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login_api.login"))
 
+
 def getGCount():
     if not hasattr(g, 'count'):
         g.count = 0
@@ -35,6 +37,7 @@ def getGCount():
         for i in writing_list:
             g.count = g.count if g.count > i['id'] else i['id']
     return g.count
+
 
 @writing_api.route("/writing", methods=["POST"])
 def writing_post():
@@ -67,18 +70,11 @@ def writing_get():
     writing_list = list(db.writing.find({}, {'_id': False}))
     # 필터 기능
     if search:
-        print(search)
-        if search == "html":
-            writing_list = list(db.writing.find({"category": "html"}, {'_id': False}))
-        elif search == "javascript":
-            writing_list = list(db.writing.find({"category": "javascript"}, {'_id': False}))
-        elif search == "flask":
-            writing_list = list(db.writing.find({"category": "flask"}, {'_id': False}))
-        elif search == "mongodb":
-            writing_list = list(db.writing.find({"category": "mongodb"}, {'_id': False}))
+        writing_list = list(db.writing.find({"category": search}, {'_id': False}))
     print(writing_list)
 
     return jsonify({'writing':writing_list})
+
 
 @writing_api.route("/writing/get/<id>", methods=["GET"])
 def writing_get_one(id):
@@ -91,6 +87,7 @@ def writing_delete():
     id_receive = request.form['id_give']
     db.writing.delete_one({'id': int(id_receive)})
     return redirect("/")
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080, debug=True)
