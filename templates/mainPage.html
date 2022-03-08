@@ -42,8 +42,12 @@
                         let usernick = `{{ user.nickname | safe }}`;
                         if (nickname == usernick) {
                             tmpid = `<div class="btn-group">
-                                        <form action="/writing" method="get">
+                                        <form action="/writing_update" method="get">
                                             <input name="id_give" id="writing${id}" type="hidden" value="${id}">
+                                            <input name="title_give" id="title${id}" type="hidden" value="${title}">
+                                            <input name="content_give" id="content${id}" type="hidden" value="${content}">
+                                            <input name="category_give" id="category${id}" type="hidden" value="${category}">
+                                            <input name="nickname_give" id="nickname${id}" type="hidden" value="${nickname}">
                                             <button type="submit"
                                                     class="btn btn-sm btn-outline-secondary" onclick="stop()">Edit
                                             </button>
