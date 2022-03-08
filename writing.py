@@ -39,12 +39,26 @@ def writing_post():
 
 @writing_api.route("/writing/get", methods=["GET"])
 def writing_get():
-    # db 가져오기
+    search = request.args.get('search')
     writing_list = list(db.writing.find({}, {'_id': False}))
+    # 필터 기능
+    if search:
+        print(search)
+        if search == "html":
+            writing_list = list(db.writing.find({"category": "html"}, {'_id': False}))
+        elif search == "javascript":
+            writing_list = list(db.writing.find({"category": "javascript"}, {'_id': False}))
+        elif search == "flask":
+            writing_list = list(db.writing.find({"category": "flask"}, {'_id': False}))
+        elif search == "mongodb":
+            writing_list = list(db.writing.find({"category": "mongodb"}, {'_id': False}))
+    print(writing_list)
+
     return jsonify({'writing':writing_list})
 
 @writing_api.route("/writing/delete", methods=["POST"])
 def writing_delete():
+    print(1111)
     id_receive = request.form['id_give']
     print(id_receive)
     db.writing.delete_one({'id': int(id_receive)})

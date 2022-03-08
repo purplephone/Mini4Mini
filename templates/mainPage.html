@@ -12,12 +12,77 @@
             crossorigin="anonymous"></script>
 
     <script>
-        {#테스트 코드, 사용안함#}
-        {#$(document).ready(function () {#}
-            {#$('#viewModal').modal();#}
-        {# });#}
+        $(document).ready(function () {
+            load_writing("")
+        });
 
-        function test(){
+        function load_writing(mode) {
+            url = `/writing/get`;
+            if (mode != "") {
+                url = url + "?search=" + mode
+            }
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: {},
+                success: function (response) {
+                    console.log(response);
+                    let rows = response['writing'];
+                    $('#cards-box').empty();
+                    for (let i = 0; i < rows.length; i++) {
+                        let title = rows[i]['title']
+                        let nickname = rows[i]['nickname']
+                        let content = rows[i]['content']
+                        let category = rows[i]['category']
+                        let id = rows[i]['id']
+                        let date = rows[i]['date']
+
+                        let tmpid = ``;
+                        let userId = `{{ user.id | safe }}`;
+                        if (id == userId) {
+                            tmpid = `<div class="btn-group">
+                                        <form action="/writing" method="get">
+                                            <input name="writing" id="${id}" type="hidden" value="${rows[i]}">
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-secondary" onclick="stop()">Edit
+                                            </button>
+                                        </form>
+
+                                        <form action="/writing/delete" method="post">
+                                            <input name="writing" type="hidden" value="${rows[i]}">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-secondary" onclick="stop()">Delete
+                                            </button>
+                                        </form>
+                                    </div>`;
+                        }
+
+                        let temp_html = `<div class="col writing-card" onclick="callingModal(${rows[i]})">
+                        <div class="container card shadow-sm">
+                            <img class="bi m-0 p-0 bd-placeholder-img card-img-top" width="300" height="150"
+                                 fill="currentColor"
+                                 src="static/card-image.svg">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    ${content}
+                                </p>
+
+                                <p>
+                                    <small class="text-muted">${date}<br>
+                                    ${nickname}</small>
+                                </p>` + tmpid +
+                            `
+                            </div>
+                        </div>
+                    </div>`;
+
+                        $('#cards-box').append(temp_html)
+                    }
+                }
+            })
+        }
+
+        function test() {
             alert("stop click");
             event.stopPropagation();
         }
@@ -25,9 +90,6 @@
     </script>
 
     <script>
-        let callModal = document.getElementsByClassName("writing-card");
-        callModal.onclick = callingModal(writing);
-
         function callingModal(writing) {
             alert(writing.content);
             document.getElementById("callModalBtn").click();
@@ -112,27 +174,32 @@
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="/" class="nav-link link-dark" aria-current="page">
+                    <a href='javascript:void(0);' onclick="load_writing(``);" class="nav-link link-dark"
+                       aria-current="page">
                         전체보기
                     </a>
                 </li>
                 <li>
-                    <a href="/?search=html" class="nav-link link-dark">
+                    <a href='javascript:void(0);' onclick="load_writing(`html`);" class="nav-link link-dark"
+                       aria-current="page">
                         HTML/CSS
                     </a>
                 </li>
                 <li>
-                    <a href="/?search=javascript" class="nav-link link-dark">
+                    <a href='javascript:void(0);' onclick="load_writing(`javascript`);" class="nav-link link-dark"
+                       aria-current="page">
                         JAVASCRIPT
                     </a>
                 </li>
                 <li>
-                    <a href="/?search=mongodb" class="nav-link link-dark">
+                    <a href='javascript:void(0);' onclick="load_writing(`mongodb`);" class="nav-link link-dark"
+                       aria-current="page">
                         MONGODB
                     </a>
                 </li>
                 <li>
-                    <a href="/?search=flask" class="nav-link link-dark">
+                    <a href='javascript:void(0);' onclick="load_writing(`flask`);" class="nav-link link-dark"
+                       aria-current="page">
                         FLASK
                     </a>
                 </li>
@@ -142,54 +209,10 @@
 
         <!--게시물 표시-->
         <div class="album py-5 col-8">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                <button type="button" class="btn" id="callModalBtn" data-bs-toggle="modal" data-bs-target="#viewModal"
-                        hidden="true"></button>
-                {% for writing in writing_list %}
-                    <!--글 시작-->
-                    <div class="col writing-card" onclick="callingModal({{ writing }})">
-                        <div class="container card shadow-sm">
-                            <!-- <div class="twit-img"><img class="bi m-0 p-0 bd-placeholder-img card-img-top" width="225"
-                                    height="225" fill="currentColor" src="img" alt="섬네일"></div> -->
-                            <img class="bi m-0 p-0 bd-placeholder-img card-img-top" width="300" height="150"
-                                 fill="currentColor"
-                                 src="static/card-image.svg">
-
-                            <div class="card-body">
-                                <p class="card-text">
-                                    {{ writing.content }}
-                                </p>
-
-                                <p>
-                                    <small class="text-muted">YY:MM:DD:HH:mm<br>
-                                    {{ writing.nickname }}</small>
-                                </p>
-
-                                {% if user.id == writing.nickname %}
-
-                                    <div class="btn-group">
-                                        <form action="/writing" method="get">
-                                            <input name="writing" type="hidden" value="{{ writing }}">
-                                            <button type="submit"
-                                                    class="btn btn-sm btn-outline-secondary" onclick="stop()">Edit
-                                            </button>
-                                        </form>
-
-                                        <form action="/writing/delete" method="post">
-                                            <input name="writing" type="hidden" value="{{ writing }}">
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-secondary" onclick="stop()">Delete
-                                            </button>
-                                        </form>
-                                    </div>
-
-                                {% endif %}
-
-                            </div>
-                        </div>
-                    </div>
-                    <!--글 끝-->
-                {% endfor %}
+            <button type="button" class="btn" id="callModalBtn" data-bs-toggle="modal" data-bs-target="#viewModal"
+                    hidden="true"></button>
+            <div id="cards-box" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <!--글 시작-->
 
 
             </div>
