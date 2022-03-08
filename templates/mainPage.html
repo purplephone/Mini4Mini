@@ -14,10 +14,10 @@
     <script>
         {#테스트 코드, 사용안함#}
         {#$(document).ready(function () {#}
-            {#$('#viewModal').modal();#}
+        {#$('#viewModal').modal();#}
         {# });#}
 
-        function test(){
+        function test() {
             alert("stop click");
             event.stopPropagation();
         }
@@ -25,16 +25,20 @@
     </script>
 
     <script>
-        let callModal = document.getElementsByClassName("writing-card");
-        callModal.onclick = callingModal(writing);
-
         function callingModal(writing) {
-            alert(writing.content);
+            {#alert(writing.content);#}
             document.getElementById("callModalBtn").click();
             $("#modalContent").text(writing.content);
         }
 
+        function stop() {
+            event.stopPropagation();
+        }
 
+        function editWriting(writing) {
+
+            event.stopPropagation();
+        }
     </script>
 </head>
 <body>
@@ -151,21 +155,24 @@
 
                                 <p>
                                     <small class="text-muted">YY:MM:DD:HH:mm<br>
-                                    {{ writing.nickname }}</small>
+                                        {{ writing.nickname }}</small>
                                 </p>
 
                                 {% if user.id == writing.nickname %}
-
                                     <div class="btn-group">
-                                        <button type="button"
-                                                class="btn btn-sm btn-outline-secondary post-delete" onclick="test()">Edit
-                                        </button>
-                                    </div>
+                                        <form action="/writing" method="get">
+                                            <input name="writing" type="hidden" value="{{ writing }}">
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-secondary" onclick="stop()">Edit
+                                            </button>
+                                        </form>
 
-                                    <div class="btn-group" >
-                                        <button type="button"
-                                                class="btn btn-sm btn-outline-secondary post-delete" onclick="test()">Delete
-                                        </button>
+                                        <form action="/writing/delete" method="post">
+                                            <input name="writing" type="hidden" value="{{ writing }}">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-secondary" onclick="stop()">Delete
+                                            </button>
+                                        </form>
                                     </div>
 
                                 {% endif %}

@@ -2,7 +2,7 @@ import jwt
 from flask import Flask, render_template, jsonify, g, Blueprint, request, redirect, url_for
 
 app = Flask(__name__)
-mainPage_api = Blueprint('mainPage_api', __name__)
+mainPage = Blueprint('mainPage_api', __name__)
 
 from pymongo import MongoClient
 import certifi
@@ -18,7 +18,7 @@ db = client.dbsparta
 SECRET_KEY = 'SPARTA'
 
 
-@mainPage_api.route('/', methods=["GET"])
+@mainPage.route('/', methods=["GET"])
 def home():
     token_receive = request.cookies.get('mytoken')
     search = request.args.get('search')
