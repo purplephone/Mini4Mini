@@ -65,7 +65,7 @@
                                  src="static/card-image.svg">
                             <div class="card-body">
                                 <p class="card-text">
-                                    ${content}
+                                    ${title}
                                 </p>
 
                                 <p>
@@ -103,6 +103,8 @@
                     document.getElementById("callModalBtn").click();
                     $("#modalContent").text(writing['content']);
                     $("#modalTitle").text(writing['title']);
+                    $("#modalDate").text(writing['date']);
+                    $("#modalNickname").text(writing['nickname']);
                 }
             })
         }
@@ -242,7 +244,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p id="modalContent"></p>
+                <p id="modalContent">Body</p>
+            </div>
+            <div class="modal-footer">
+                <p class="text-muted" id="modalDate">date</p>
+                <p class="text-muted" id="modalNickname">nickname</p>
             </div>
         </div>
     </div>
