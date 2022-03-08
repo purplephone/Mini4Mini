@@ -39,10 +39,10 @@
 
                         let tmpid = ``;
                         let userId = `{{ user.id | safe }}`;
-                        if (id == userId) {
+                        if (nickname == userId) {
                             tmpid = `<div class="btn-group">
                                         <form action="/writing" method="get">
-                                            <input name="writing" id="${id}" type="hidden" value="${rows[i]}">
+                                            <input name="writing" id="writing${id}" type="hidden" value="${rows[i]}">
                                             <button type="submit"
                                                     class="btn btn-sm btn-outline-secondary" onclick="stop()">Edit
                                             </button>
