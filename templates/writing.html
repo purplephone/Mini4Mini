@@ -76,6 +76,8 @@
             let title = $('#title').val()
             let content = $('#content').val()
             let category = $('#category option:selected').val()
+            {#줄바꿈 처리#}
+            content = content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
 
             if(title == ''){
                 alert('제목을 입력하세요')
