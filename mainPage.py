@@ -17,12 +17,11 @@ SECRET_KEY = 'SPARTA'
 @mainPage.route('/', methods=["GET"])
 def home():
     token_receive = request.cookies.get('mytoken')
-
     try:
         # 로그인 복호화
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-
-        return render_template('mainPage.html', user=payload)
+        print(payload)
+        return render_template('mainPage.html', user=payload['user'])
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login_api.login"))
     except jwt.exceptions.DecodeError:
