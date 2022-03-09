@@ -32,10 +32,17 @@ def writing():
 
 def getGCount():
     if not hasattr(g, 'count'):
-        g.count = 0
-        writing_list = list(db.writing.find({}, {'_id': False}))
-        for i in writing_list:
-            g.count = g.count if g.count > i['id'] else i['id']
+        count_one = db.count.find_one({"name": "count"}, {'_id': False})
+        print(count_one)
+        if count_one:
+            g.count = count_one["val"]
+        else:
+            doc = {
+                "name": "count",
+                "val": 100
+            }
+            db.count.insert_one(doc)
+            g.count = 100
     return g.count
 
 
@@ -63,6 +70,7 @@ def writing_post():
         'file': ""
     }
     db.writing.insert_one(doc)
+    db.count.update_one({"name":"count"}, {'$set': {'val': g.count}})
     return jsonify({'result': 'success', 'msg': '등록되었습니다.', 'writing_id': getattr(g, "count", 0)})
 
 
@@ -91,7 +99,7 @@ def writing_get():
     else:
         writing_list.sort(key=lambda x: -x["id"])
 
-    return jsonify({'writing':writing_list})
+    return jsonify({'writing': writing_list})
 
 
 @writing_api.route("/writing/get/<id>", methods=["GET"])
