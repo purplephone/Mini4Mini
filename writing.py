@@ -112,7 +112,8 @@ def writing_get_one(id):
 def writing_delete():
     id_receive = request.form['id_give']
     user = db.writing.find_one({'id':int(id_receive)})
-    os.remove('static/' + user['file'])
+    if(user['file'] != ""):
+        os.remove('static/' + user['file'])
     db.writing.delete_one({'id': int(id_receive)})
     return redirect("/")
 
