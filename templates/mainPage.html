@@ -13,18 +13,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     {% include 'like.html'  ignore missing %}
+    {% include 'sorting.html'  ignore missing %}
 
     <script>
         $(document).ready(function () {
-            load_writing("")
+            load_writing("","new")
         });
 
-        function load_writing(mode) {
+        function load_writing(mode, sort) {
             let like_list = like_get();
             url = `/writing/get`;
-            if (mode != "") {
+            setSearch(mode);
+            setSort(sort);
+
+            if (mode != ``) {
                 url = url + "?search=" + mode
+                if(sort != ``){
+                    url = url + "&sort=" + sort
+                }
             }
+            else{
+                if(sort != ``){
+                    url = url + "?sort=" + sort
+                }
+            }
+
             $.ajax({
                 type: 'GET',
                 url: url,
@@ -63,7 +76,6 @@
                                                     class="btn btn-sm btn-outline-secondary me-1" onclick="stop()">Edit
                                             </button>
                                         </form>
-
                                         <form action="/writing/delete" method="post">
                                             <input name="id_give" type="hidden" value="${id}">
                                             <button type="submit"
@@ -113,7 +125,6 @@
                                 <p class="card-text">
                                     ${title}
                                 </p>
-
                                 <p>
                                     <div class="row justify-content-end">
                                         <div class="col-6">
@@ -159,7 +170,6 @@
                     {#중요함#}
                     $("#modalContent").empty();
                     $("#modalContent").append(writing['content']);
-                    $("#modalContent").append(writing['image']);
                     $("#modalTitle").text(writing['title']);
                     $("#modalDate").text(writing['date']);
                     $("#modalLikes").text("Likes: " + writing['like_count']);
@@ -186,6 +196,7 @@
             window.location.href = "/login"
         }
     </script>
+
 </head>
 <body>
 <div class="container">
@@ -251,7 +262,7 @@
             <hr>
             <ul class="nav nav-pills ">
                 <li class="nav-item">
-                    <a href='javascript:void(0);' onclick="load_writing(`like&user_id={{ user.username | safe }}`);"
+                    <a href='javascript:void(0);' onclick="load_writing(`like&user_id={{ user.username | safe }}`,getSort());"
                        class="nav-link link-dark"
                        aria-current="page">
                         즐겨찾기
@@ -261,43 +272,43 @@
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href='javascript:void(0);' onclick="load_writing(``);" class="nav-link link-dark"
+                    <a href='javascript:void(0);' onclick="load_writing(``,getSort());" class="nav-link link-dark"
                        aria-current="page">
                         전체보기
                     </a>
                 </li>
                 <li>
-                    <a href='javascript:void(0);' onclick="load_writing(`html`);" class="nav-link link-dark"
+                    <a href='javascript:void(0);' onclick="load_writing(`html`,getSort());" class="nav-link link-dark"
                        aria-current="page">
                         HTML/CSS
                     </a>
                 </li>
                 <li>
-                    <a href='javascript:void(0);' onclick="load_writing(`javascript`);" class="nav-link link-dark"
+                    <a href='javascript:void(0);' onclick="load_writing(`javascript`,getSort());" class="nav-link link-dark"
                        aria-current="page">
                         JAVASCRIPT
                     </a>
                 </li>
                 <li>
-                    <a href='javascript:void(0);' onclick="load_writing(`mongodb`);" class="nav-link link-dark"
+                    <a href='javascript:void(0);' onclick="load_writing(`mongodb`,getSort());" class="nav-link link-dark"
                        aria-current="page">
                         MONGODB
                     </a>
                 </li>
                 <li>
-                    <a href='javascript:void(0);' onclick="load_writing(`flask`);" class="nav-link link-dark"
+                    <a href='javascript:void(0);' onclick="load_writing(`flask`,getSort());" class="nav-link link-dark"
                        aria-current="page">
                         FLASK
                     </a>
                 </li>
                 <li>
-                    <a href='javascript:void(0);' onclick="load_writing(`git`);" class="nav-link link-dark"
+                    <a href='javascript:void(0);' onclick="load_writing(`git`,getSort());" class="nav-link link-dark"
                        aria-current="page">
                         GIT
                     </a>
                 </li>
                 <li>
-                    <a href='javascript:void(0);' onclick="load_writing(`management`);" class="nav-link link-dark"
+                    <a href='javascript:void(0);' onclick="load_writing(`management`,getSort());" class="nav-link link-dark"
                        aria-current="page">
                         MANAGEMENT
                     </a>
@@ -316,17 +327,18 @@
                     </div>
                     <div class="input-group-text">
                         <input class="form-check-input mx-2" type="radio" name="sortMode" id="flexRadioDefault1"
-                               value="new" checked>
+                               onclick="load_writing(getSearch(),`new`);" checked>
                         <label class="form-check-label" for="flexRadioDefault1">최신순</label>
                         <input class="form-check-input mx-2" type="radio" name="sortMode" id="flexRadioDefault2"
-                               value="old">
+                               onclick="load_writing(getSearch(),`old`);">
                         <label class="form-check-label" for="flexRadioDefault2">과거순</label>
                         <input class="form-check-input mx-2" type="radio" name="sortMode" id="flexRadioDefault3"
-                               value="like">
+                               onclick="load_writing(getSearch(),`like`);">
                         <label class="form-check-label" for="flexRadioDefault3">추천순</label>
                     </div>
                 </form>
             </div>
+
             <button type="button" class="btn" id="callModalBtn" data-bs-toggle="modal" data-bs-target="#viewModal"
                     hidden="true"></button>
             <div id="cards-box" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
