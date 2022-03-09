@@ -43,6 +43,7 @@ def update_img(id):
         f = request.files['file']
         if(f.filename == ''):
             return jsonify({'result': 'success', 'msg': '파일 업로드 성공.'})
+
         extension = f.filename.split(".")[-1]
         f.filename = str(id) + "." + extension
         os.remove('./static/' + secure_filename(f.filename))
