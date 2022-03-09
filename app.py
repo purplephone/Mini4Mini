@@ -53,5 +53,9 @@ from like import like_api
 
 app.register_blueprint(like_api)
 
+from upload import upload_api
+
+app.register_blueprint(upload_api)
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080, debug=True)

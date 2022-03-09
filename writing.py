@@ -45,6 +45,7 @@ def writing_post():
     title_receive = request.form['title_give']
     content_receive = request.form['content_give']
     category_receive = request.form['category_give']
+
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
     print(payload)
@@ -61,7 +62,7 @@ def writing_post():
         'like_count': 0
     }
     db.writing.insert_one(doc)
-    return jsonify({'result': 'success', 'msg': '등록되었습니다.'})
+    return jsonify({'result': 'success', 'msg': '등록되었습니다.', 'writing_id': getattr(g, "count", 0)})
 
 
 @writing_api.route("/writing/get", methods=["GET"])
@@ -69,6 +70,7 @@ def writing_get():
     # db 가져오기
     search = request.args.get("search")
     writing_list = list(db.writing.find({}, {'_id': False}).sort("id", -1))
+    print(writing_list)
     # 필터 기능
     if search:
         if search == "like":
