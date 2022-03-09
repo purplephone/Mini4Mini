@@ -12,7 +12,7 @@ from pymongo import MongoClient
 import certifi
 
 ca = certifi.where()
-client = MongoClient('mongodb+srv://test:sparta@cluster0.hdgtj.mongodb.net/Cluster0?retryWrites=true&w=majority',
+client = MongoClient('mongodb+srv://test:sparta@cluster0.zv3yk.mongodb.net/cluster0?retryWrites=true&w=majority',
                      tlsCAFile=ca)
 db = client.dbsparta
 
@@ -40,9 +40,13 @@ from mainPage import mainPage
 app.register_blueprint(mainPage)
 
 # 김경래 수정
-from writing import writing_api
+from upload_file import upload_file_api
 
-app.register_blueprint(writing_api)
+app.register_blueprint(upload_file_api)
+
+# from writing import writing_api
+#
+# app.register_blueprint(writing_api)
 
 from writing_update import writing_update_api
 

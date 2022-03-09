@@ -3,19 +3,24 @@ import time
 from pymongo import MongoClient
 import certifi
 from flask import Flask, render_template, request, jsonify, g, Blueprint, redirect, url_for
+from datetime import datetime
+from werkzeug.utils import secure_filename
+
+
+
 
 app = Flask(__name__)
 
-writing_api = Blueprint('writing_api', __name__)
+upload_file_api = Blueprint('upload_file_api', __name__)
 
 ca = certifi.where()
-client = MongoClient('mongodb+srv://test:sparta@cluster0.zv3yk.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
+client = MongoClient('mongodb+srv://test:sparta@cluster0.zv3yk.mongodb.net/cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
 db = client.dbsparta
 
 SECRET_KEY = 'SPARTA'
 
 
-@writing_api.route('/writing')
+@upload_file_api.route('/writing')
 def writing():
     writing_list = list(db.writing.find({}, {'_id': False}))
     token_receive = request.cookies.get('mytoken')
@@ -23,7 +28,7 @@ def writing():
         # 로그인 복호화
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         print(payload)
-        return render_template('writing.html', writing_list=writing_list)
+        return render_template('upload_file.html', writing_list=writing_list)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login_api.login"))
     except jwt.exceptions.DecodeError:
@@ -39,12 +44,26 @@ def getGCount():
     return g.count
 
 
-@writing_api.route("/writing", methods=["POST"])
+@upload_file_api.route("/writing", methods=["POST"])
 def writing_post():
     # db 저장
+
     title_receive = request.form['title_give']
     content_receive = request.form['content_give']
-    category_receive = request.form['category_give']
+    category_receive = request.form.get('category_give')
+
+    if "file_give" in request.files:
+        file = request.files["file_give"]
+        filename = secure_filename(file.filename)
+        extension = filename.split(".")[-1]
+        file_path = f"static/{filename}.{extension}"
+        file.save(file_path)
+    # else:
+    #     filename = secure_filename('default')
+    #     file_path = '#'
+
+
+
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
     print(payload)
@@ -58,13 +77,15 @@ def writing_post():
         'category': category_receive,
         'date': time.strftime('%m-%d %H:%M'),
         'nickname': payload['user']['nickname'],
-        'like_count': 0
+        'like_count': 0,
+        'file': filename,
+        'file_src': file_path
     }
     db.writing.insert_one(doc)
     return jsonify({'result': 'success', 'msg': '등록되었습니다.'})
 
 
-@writing_api.route("/writing/get", methods=["GET"])
+@upload_file_api.route("/writing/get", methods=["GET"])
 def writing_get():
     # db 가져오기
     search = request.args.get("search")
@@ -84,13 +105,13 @@ def writing_get():
     return jsonify({'writing':writing_list})
 
 
-@writing_api.route("/writing/get/<id>", methods=["GET"])
+@upload_file_api.route("/writing/get/<id>", methods=["GET"])
 def writing_get_one(id):
     writingOne = db.writing.find_one({'id': int(id)}, {'_id': False})
     return jsonify({'writing': writingOne})
 
 
-@writing_api.route("/writing/delete", methods=["POST"])
+@upload_file_api.route("/writing/delete", methods=["POST"])
 def writing_delete():
     id_receive = request.form['id_give']
     db.writing.delete_one({'id': int(id_receive)})

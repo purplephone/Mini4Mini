@@ -42,6 +42,7 @@
                         let id = rows[i]['id']
                         let date = rows[i]['date']
                         let like_users = rows[i]['like_count'];
+                        let file = rows[i]['file']
 
                         let tmpid = `<div class="btn-group">`;
                         let usernick = `{{ user.nickname | safe }}`;
@@ -55,6 +56,7 @@
                                             <input name="content_give" id="content${id}" type="hidden" value="${content}">
                                             <input name="category_give" id="category${id}" type="hidden" value="${category}">
                                             <input name="nickname_give" id="nickname${id}" type="hidden" value="${nickname}">
+                                            {#<input name="nickname_give" id="file${file}" type="visible" value="${file}">#}
                                             <button type="submit"
                                                     class="btn btn-sm btn-outline-secondary me-1" onclick="stop()">Edit
                                             </button>
@@ -97,7 +99,7 @@
                         <div class="container card shadow-sm">
                             <img class="bi m-0 p-0 bd-placeholder-img card-img-top" width="300" height="150"
                                  fill="currentColor"
-                                 src="../static/card-image.svg">
+                                 src="../static/${file}">
                             <div class="card-body px-1">
                                 <p class="card-text">
                                     ${title}

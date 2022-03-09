@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+{#    파일업로드 라이브러리#}
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+
+    <title>Mini4Mini</title>
+
+    <style>
+        .container select{
+            right: 0;
+            width: 200px;
+            height: 50px;
+            margin-top: 15px;
+        }
+
+        .container > button{
+            position: absolute;
+            right: 15px;
+            bottom: 0;
+        }
+
+        .container {
+            position: relative;
+        }
+
+        #title.form-control{
+            width: 50%;
+        }
+
+        #content.form-control{
+            margin: 30px 0;
+        }
+    </style>
+    <script>
+        $(document).ready(function (){
+            bsCustomFileInput.init()
+            {#load_writing()#}
+        })
+
+        function add_writing() {
+            let title = $('#title').val()
+            let content = $("#content").val()
+            let category = $('#category option:selected').val()
+            let file = $('#file')[0].files[0]
+            let form_data = new FormData()
+
+            {#줄바꿈 처리#}
+            content = content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+
+            form_data.append("file_give", file)
+            form_data.append("title_give", title)
+            form_data.append("content_give", content)
+
+            if (title == '') {
+                alert('제목을 입력하세요')
+                $('#title').focus()
+            } else if (content == '') {
+                alert('내용을 입력하세요')
+                $('#content').focus()
+            } else if (category == 0) {
+                alert('카테고리를 선택해주세요')
+                $('#category').focus()
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/writing",
+                    data: form_data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        let img
+                        alert(response["msg"])
+                        window.location.href = '/'
+                    }
+                });
+            }
+
+
+        }
+
+
+
+        {##}
+        {#function add_writing() {#}
+        {#    let title = $('#title').val()#}
+        {#    let content = $('#content').val()#}
+        {#    let category = $('#category option:selected').val()#}
+            {#줄바꿈 처리#}
+        {#    content = content.replace(/(?:\r\n|\r|\n)/g, '<br/>');#}
+        {##}
+        {#    if(title == ''){#}
+        {#        alert('제목을 입력하세요')#}
+        {#        $('#title').focus()#}
+        {#    }#}
+        {#    else if(content == ''){#}
+        {#        alert('내용을 입력하세요')#}
+        {#        $('#content').focus()#}
+        {#    }#}
+        {#    else if(category == 0){#}
+        {#        alert('카테고리를 선택해주세요')#}
+        {#        $('#category').focus()#}
+        {#    }else{#}
+        {#        $.ajax({#}
+        {#            type: 'POST',#}
+        {#            url: '/writing',#}
+        {#            data: {title_give: title, content_give: content, category_give: category},#}
+        {#            success: function (response) {#}
+        {#                alert(response['msg'])#}
+        {#                window.location.href = "/"#}
+        {#            }#}
+        {#        })#}
+        {#    }#}
+        {#}#}
+
+
+        function delete_writing(id) {
+            console.log(id)
+            if (confirm('삭제하시겠습니까?')) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/writing/delete',
+                    data: {id_give: id},
+                    success: function (response) {
+                        console.log(response)
+                        alert(response['msg'])
+                        {#메인페이지로 이동#}
+                        window.location.href = "/"
+                    }
+                })
+            }
+        }
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/login"
+        }
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
+                     class="bi bi-house-fill"
+                     viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6zm5-.793V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
+                    <path fill-rule="evenodd"
+                          d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
+                </svg>
+                <span class="fs-4">
+                    Mini4Mini
+                </span>
+            </a>
+
+            <ul class="nav nav-pills">
+                <input id="main-id" type="hidden" value="id">
+
+                <li class="nav-item mx-1">
+                    <a href="/login" class="nav-link" onclick = "sign_out()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
+                             class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                            <path fill-rule="evenodd"
+                                  d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </header>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="title" placeholder="url">
+            <label for="title">제목</label>
+        </div>
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="content"
+                style="height: 400px"></textarea>
+            <label for="content">내용</label>
+        </div>
+        <select id="category" class="form-select" aria-label="Default select example">
+            <option value="0" selected>카테고리선택</option>
+            <option value="html">HTML/CSS</option>
+            <option value="flask">FLASK</option>
+            <option value="javascript">JAVASCRIPT</option>
+            <option value="mongodb">MONGODB</option>
+            <option value="git">GIT</option>
+            <option value="management">MANAGEMENT</option>
+        </select>
+        <button onclick="add_writing()" type="button" class="btn btn-primary">추가</button>
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" accept = "image/*" id="file">
+
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script>
+
+        document.querySelector("#sendButton").addEventListener('click', () => {
+
+            let selectFile = document.querySelector("#inputImage").files[0];
+
+            const file = URL.createObjectURL(selectFile);
+
+            document.querySelector(".uploadImage").src = file;
+
+        })
+
+    </script>
+</head>
+<body>
+<input type="file" id="inputImage">
+
+<button id="sendButton">보내기</button>
+
+<img src="" class="uploadImage">
+
+
+</body>
+</html>
