@@ -162,6 +162,14 @@
                     $("#modalTitle").text(writing['title']);
                     $("#modalDate").text(writing['date']);
                     $("#modalLikes").text("Likes: " + writing['like_count']);
+                    $("#modalImage").empty();
+                    if(writing['file'] == ""){
+                        $("#modalImage").append(`<img class="img-fluid" id="modalImage" src="../static/card-image.svg">`);
+                    }
+                    else {
+                        $("#modalImage").append(`<img class="img-fluid" id="modalImage" src="../static/${writing['file']}">`);
+                    }
+
                 }
             })
         }
@@ -176,8 +184,6 @@
             alert('로그아웃!')
             window.location.href = "/login"
         }
-
-
     </script>
 </head>
 <body>
