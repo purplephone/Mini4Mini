@@ -4,7 +4,6 @@ from pymongo import MongoClient
 import certifi
 from flask import Flask, render_template, request, jsonify, g, Blueprint, redirect, url_for
 import os
-
 app = Flask(__name__)
 
 writing_api = Blueprint('writing_api', __name__)
@@ -95,7 +94,7 @@ def writing_get_one(id):
 @writing_api.route("/writing/delete", methods=["POST"])
 def writing_delete():
     id_receive = request.form['id_give']
-    user = db.writing.find_one({'id': int(id_receive)}, {'_id': False})
+    user = db.writing.find_one({'id':int(id_receive)})
     os.remove('static/' + user['file'])
     db.writing.delete_one({'id': int(id_receive)})
     return redirect("/")
