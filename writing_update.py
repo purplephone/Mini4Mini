@@ -40,13 +40,17 @@ def update_writing():
 @writing_update_api.route('/update_img/<id>', methods=['POST'])
 def update_img(id):
     if request.method == 'POST':
+        writing = db.writing.find_one({'id': int(id)}, {'_id': False})
         f = request.files['file']
         if(f.filename == ''):
             return jsonify({'result': 'success', 'msg': '파일 업로드 성공.'})
-        extension = f.filename.split(".")[-1]
-        f.filename = str(id) + "." + extension
-        os.remove('./static/' + secure_filename(f.filename))
-        f.save("./static/"+secure_filename(f.filename))
+        else:
+            extension = f.filename.split(".")[-1]
+            f.filename = str(id) + "." + extension
+            if(writing['file'] != ""):
+                os.remove('./static/' + writing['file'])
+            f.save("./static/"+secure_filename(f.filename))
+            db.writing.update_one({'id': int(id)}, {'$set': {'file': secure_filename(f.filename)}})
         return jsonify({'result': 'success', 'msg': '파일 업로드 성공.'})
 
 if __name__ == '__main__':
