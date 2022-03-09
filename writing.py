@@ -70,7 +70,10 @@ def writing_get():
     writing_list = list(db.writing.find({}, {'_id': False}).sort("id", -1))
     # 필터 기능
     if search:
-        writing_list = list(db.writing.find({"category": search}, {'_id': False}))
+        if search =="like":
+            writing_list = list(db.writing.find({"category": search}, {'_id': False}))
+        else:
+            writing_list = list(db.writing.find({"category": search}, {'_id': False}))
     print(writing_list)
 
     return jsonify({'writing':writing_list})
