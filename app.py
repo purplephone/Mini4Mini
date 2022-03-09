@@ -48,5 +48,10 @@ from writing_update import writing_update_api
 
 app.register_blueprint(writing_update_api)
 
+# 임재현 수정
+from like import like_api
+
+app.register_blueprint(like_api)
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080, debug=True)
