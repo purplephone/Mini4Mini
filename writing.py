@@ -9,7 +9,7 @@ app = Flask(__name__)
 writing_api = Blueprint('writing_api', __name__)
 
 ca = certifi.where()
-client = MongoClient('mongodb+srv://test:sparta@cluster0.ldbjw.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
+client = MongoClient('mongodb+srv://test:sparta@cluster0.hdgtj.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
 db = client.dbsparta
 
 SECRET_KEY = 'SPARTA'
@@ -57,7 +57,8 @@ def writing_post():
         'content': content_receive,
         'category': category_receive,
         'date': time.strftime('%m-%d %H:%M'),
-        'nickname': payload['user']['nickname']
+        'nickname': payload['user']['nickname'],
+        'like_count': 0
     }
     db.writing.insert_one(doc)
     return jsonify({'result': 'success', 'msg': '등록되었습니다.'})
@@ -70,7 +71,14 @@ def writing_get():
     writing_list = list(db.writing.find({}, {'_id': False}).sort("id", -1))
     # 필터 기능
     if search:
-        writing_list = list(db.writing.find({"category": search}, {'_id': False}))
+        if search == "like":
+            user_id = request.args.get("user_id")
+            like_list = list(db.like.find({"user_id": user_id}, {'_id': False}))
+            like_id_list = [int(x['writing_id']) for x in like_list]
+            print("like: ", like_id_list)
+            writing_list = list(db.writing.find({"id": {"$in": like_id_list}}, {'_id': False}))
+        else:
+            writing_list = list(db.writing.find({"category": search}, {'_id': False}))
     print(writing_list)
 
     return jsonify({'writing':writing_list})

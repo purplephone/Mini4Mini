@@ -12,12 +12,15 @@
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
+    {% include 'like.html'  ignore missing %}
+
     <script>
         $(document).ready(function () {
             load_writing("")
         });
 
         function load_writing(mode) {
+            let like_list = like_get();
             url = `/writing/get`;
             if (mode != "") {
                 url = url + "?search=" + mode
@@ -27,9 +30,10 @@
                 url: url,
                 data: {},
                 success: function (response) {
-                    console.log(response);
                     let rows = response['writing'];
                     $('#cards-box').empty();
+                    {#console.log(like_list);#}
+
                     for (let i = 0; i < rows.length; i++) {
                         let title = rows[i]['title']
                         let nickname = rows[i]['nickname']
@@ -37,11 +41,14 @@
                         let category = rows[i]['category']
                         let id = rows[i]['id']
                         let date = rows[i]['date']
+                        let like_users = rows[i]['like_count'];
 
-                        let tmpid = ``;
+                        let tmpid = `<div class="btn-group">`;
                         let usernick = `{{ user.nickname | safe }}`;
+                        let user_id = `{{ user.username | safe }}`;
+
                         if (nickname == usernick) {
-                            tmpid = `<div class="btn-group">
+                            tmpid += `
                                         <form action="/writing_update" method="get">
                                             <input name="id_give" id="writing${id}" type="hidden" value="${id}">
                                             <input name="title_give" id="title${id}" type="hidden" value="${title}">
@@ -49,32 +56,63 @@
                                             <input name="category_give" id="category${id}" type="hidden" value="${category}">
                                             <input name="nickname_give" id="nickname${id}" type="hidden" value="${nickname}">
                                             <button type="submit"
-                                                    class="btn btn-sm btn-outline-secondary" onclick="stop()">Edit
+                                                    class="btn btn-sm btn-outline-secondary me-1" onclick="stop()">Edit
                                             </button>
                                         </form>
 
                                         <form action="/writing/delete" method="post">
                                             <input name="id_give" type="hidden" value="${id}">
                                             <button type="submit"
-                                                    class="btn btn-sm btn-outline-secondary" onclick="stop()">Delete
+                                                    class="btn btn-sm btn-outline-secondary me-1" onclick="stop()">Delete
                                             </button>
-                                        </form>
-                                    </div>`;
+                                        </form>`;
                         }
+                        else{
+                            let like_filter = like_list.filter(like => like["writing_id"] == id);
+                            {#console.log(like_filter);#}
+                            if(like_filter.length > 0){
+                                tmpid+= `<form id="unlikeform${id}" method="">
+                                            <input name="user_id" type="hidden" value="${user_id}">
+                                            <input name="search" type="hidden" value="">
+                                            {#<input name="sort" type="hidden" value="">#}
+                                            <button type="button"
+                                                    class="btn btn-sm btn btn-outline-danger me-1" onclick="stop();like_delete(${id});">UnLike
+                                            </button>
+                                        </form>`;
+                            }
+                            else {
+                                tmpid+= `<form id="likeform${id}" method="">
+                                            <input name="user_id" type="hidden" value="${user_id}">
+                                            <input name="search" type="hidden" value="">
+                                            {#<input name="sort" type="hidden" value="">#}
+                                            <button type="button"
+                                                    class="btn btn-sm btn btn-outline-success me-1" onclick="stop();like_post(${id});">Like
+                                            </button>
+                                        </form>`;
+                            }
+                        }
+                        tmpid += `</div>`;
 
                         let temp_html = `<div class="col writing-card" onclick="callingModal(${id})">
                         <div class="container card shadow-sm">
                             <img class="bi m-0 p-0 bd-placeholder-img card-img-top" width="300" height="150"
                                  fill="currentColor"
                                  src="../static/card-image.svg">
-                            <div class="card-body">
+                            <div class="card-body px-1">
                                 <p class="card-text">
                                     ${title}
                                 </p>
 
                                 <p>
-                                    <small class="text-muted">${date}<br>
-                                    ${nickname}</small>
+                                    <div class="row justify-content-end">
+                                        <div class="col-6">
+                                            <small class="text-muted">${date}<br>
+                                            ${nickname}</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="float-end"><small class="text-muted ">likes: ${like_users}</small></div>
+                                        </div>
+                                    </div>
                                 </p>` + tmpid +
                             `
                             </div>
@@ -110,7 +148,7 @@
                     $("#modalContent").append(writing['content']);
                     $("#modalTitle").text(writing['title']);
                     $("#modalDate").text(writing['date']);
-                    $("#modalNickname").text(writing['nickname']);
+                    $("#modalLikes").text("Likes: "+writing['like_count']);
                 }
             })
         }
@@ -188,12 +226,12 @@
     <div class="row justify-content-end">
 
         <!-- 필터링용 사이드바-->
-        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light col-3" >
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light col-3">
             <span class="fs-4">Filter</span>
             <hr>
             <ul class="nav nav-pills ">
                 <li class="nav-item">
-                    <a href='javascript:void(0);' onclick="load_writing(``);" class="nav-link link-dark"
+                    <a href='javascript:void(0);' onclick="load_writing(`like&user_id={{ user.username | safe }}`);" class="nav-link link-dark"
                        aria-current="page">
                         즐겨찾기
                     </a>
@@ -248,7 +286,7 @@
         </div>
 
 
-                <!--게시물 표시-->
+        <!--게시물 표시-->
         <div class="album py-4 col-9">
             <div class="mb-3">
                 <form action="/" method="GET" class="input-group">
@@ -285,8 +323,8 @@
 <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="newModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Title</h5>
+            <div class="modal-header ">
+                <div><h5 class="modal-title" id="modalTitle">Title</h5></div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -294,7 +332,10 @@
             </div>
             <div class="modal-footer">
                 <p class="text-muted" id="modalDate">date</p>
+                <p></p>
                 <p class="text-muted" id="modalNickname">nickname</p>
+                <p></p>
+                <p class="text-muted" id="modalLikes">Likes: 0</p>
             </div>
         </div>
     </div>

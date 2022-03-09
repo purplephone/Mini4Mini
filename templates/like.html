@@ -1,0 +1,78 @@
+<script>
+    function like_get(){
+        let like_list = [];
+        $.ajax({
+            url : "/like",
+            type : 'GET',
+            async : false,
+            success : function(response) {
+                like_list = response['like_list'];
+                return like_list;
+            }
+        });
+        return like_list;
+    }
+
+    function like_get_fromID(writing_id){
+        let like_users = [];
+        $.ajax({
+            url : `/like/${writing_id}`,
+            type : 'GET',
+            async : false,
+            success : function(response) {
+                like_users = response['like_list'];
+                return like_users;
+            }
+        });
+        return like_users;
+    }
+
+    function like_post(writing_id){
+        let formData = $(`#likeform${writing_id}`).serializeArray();
+        console.log(formData);
+        let doc = {
+            user_id: formData[0]["value"],
+            writing_id: writing_id
+        };
+        console.log(doc);
+
+        $.ajax({
+            cache : false,
+            url : "/like",
+            type : 'POST',
+            data : doc,
+            success : function(response) {
+                 alert(response['msg'])
+                 {#메인페이지로 이동#}
+                 window.location.href = "/"
+            }
+        });
+
+    }
+
+    function like_delete(writing_id){
+        let formData = $(`#unlikeform${writing_id}`).serializeArray();
+        console.log(formData);
+        let doc = {
+            user_id: formData[0]["value"],
+            writing_id: writing_id
+        };
+        console.log(doc);
+
+        $.ajax({
+            cache : false,
+            url : "/like",
+            method : "DELETE",
+            data : doc,
+            success : function(response) {
+                 alert(response['msg'])
+                 {#메인페이지로 이동#}
+                 window.location.href = "/";
+            }
+        });
+
+    }
+
+
+
+</script>
