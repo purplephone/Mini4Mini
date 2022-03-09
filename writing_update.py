@@ -9,7 +9,7 @@ app = Flask(__name__)
 writing_update_api = Blueprint('writing_update_api', __name__)
 
 ca = certifi.where()
-client = MongoClient('mongodb+srv://test:sparta@cluster0.zv3yk.mongodb.net/cluster0?retryWrites=true&w=majority',
+client = MongoClient('mongodb+srv://test:sparta@cluster0.hdgtj.mongodb.net/cluster0?retryWrites=true&w=majority',
                      tlsCAFile=ca)
 db = client.dbsparta
 SECRET_KEY = 'SPARTA'
