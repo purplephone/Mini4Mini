@@ -70,8 +70,9 @@ def writing_post():
 def writing_get():
     # db 가져오기
     search = request.args.get("search")
-    writing_list = list(db.writing.find({}, {'_id': False}).sort("id", -1))
-    print(writing_list)
+    sort = request.args.get("sort")
+
+    writing_list = list(db.writing.find({}, {'_id': False}))
     # 필터 기능
     if search:
         if search == "like":
@@ -81,6 +82,14 @@ def writing_get():
             writing_list = list(db.writing.find({"id": {"$in": like_id_list}}, {'_id': False}))
         else:
             writing_list = list(db.writing.find({"category": search}, {'_id': False}))
+
+    # else = new
+    if sort == "old":
+        writing_list.sort(key=lambda x: x["id"])
+    elif sort == "like":
+        writing_list.sort(key=lambda x: -x["like_count"])
+    else:
+        writing_list.sort(key=lambda x: -x["id"])
 
     return jsonify({'writing':writing_list})
 
