@@ -319,27 +319,7 @@
 </div>
 
 
-<!-- view Modal -->
-<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="newModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header ">
-                <div><h5 class="modal-title" id="modalTitle">Title</h5></div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p id="modalContent">Body</p>
-            </div>
-            <div class="modal-footer">
-                <p class="text-muted" id="modalDate">date</p>
-                <p></p>
-                <p class="text-muted" id="modalNickname">nickname</p>
-                <p></p>
-                <p class="text-muted" id="modalLikes">Likes: 0</p>
-            </div>
-        </div>
-    </div>
-</div>
+{% include 'modal.html'  ignore missing %}
 
 
 </body>
