@@ -46,7 +46,7 @@
             {#load_writing()#}
         })
 
-        function add_writing() {
+        function add_writing2() {
             let title = $('#title').val()
             let content = $('#content').val()
             let category = $('#category option:selected').val()
@@ -79,6 +79,7 @@
                         category_give: category
                     },
                     success: function (response) {
+                        alert(response['msg']);
                         $.ajax({
                             type: 'POST',
                             url: `/upload/${response['writing_id']}`,
@@ -87,8 +88,7 @@
                             cache: false,
                             processData: false,
                             success: function (response) {
-                                alert("업로드 성공");
-                                window.location.href = "/"
+                                alert(response['msg']);
                             },
                         });
                     }
@@ -165,11 +165,6 @@
                       style="height: 400px"></textarea>
         <label for="content">내용</label>
     </div>
-
-    <form id="fileInput" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*"/>
-    </form>
-
     <select id="category" class="form-select" aria-label="Default select example">
         <option value="0" selected>카테고리선택</option>
         <option value="html">HTML/CSS</option>
@@ -180,7 +175,11 @@
         <option value="management">MANAGEMENT</option>
     </select>
 
-    <button onclick="add_writing()" type="button" class="btn btn-primary">추가</button>
+    <form id="fileInput" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*"/>
+    </form>
+
+    <button onclick="add_writing2()" type="button" class="btn btn-primary">추가</button>
 </div>
 </body>
 </html>
