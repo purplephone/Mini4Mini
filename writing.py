@@ -71,8 +71,12 @@ def writing_get():
     writing_list = list(db.writing.find({}, {'_id': False}).sort("id", -1))
     # 필터 기능
     if search:
-        if search =="like":
-            writing_list = list(db.writing.find({"category": search}, {'_id': False}))
+        if search == "like":
+            user_id = request.args.get("user_id")
+            like_list = list(db.like.find({"user_id": user_id}, {'_id': False}))
+            like_id_list = [int(x['writing_id']) for x in like_list]
+            print("like: ", like_id_list)
+            writing_list = list(db.writing.find({"id": {"$in": like_id_list}}, {'_id': False}))
         else:
             writing_list = list(db.writing.find({"category": search}, {'_id': False}))
     print(writing_list)

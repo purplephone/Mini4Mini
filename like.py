@@ -27,8 +27,8 @@ def like_get_all():
     try:
         # 로그인 복호화
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # like_list = list(db.like.find({"user_id": payload['user']["username"]}, {'_id': False}))
-        like_list = list(db.like.find({},{'_id': False}))
+        like_list = list(db.like.find({"user_id": payload['user']["username"]}, {'_id': False}))
+        # like_list = list(db.like.find({},{'_id': False}))
 
         return jsonify({'like_list': like_list})
     except jwt.ExpiredSignatureError:
