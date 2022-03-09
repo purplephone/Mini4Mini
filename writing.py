@@ -83,12 +83,12 @@ def writing_get():
         else:
             writing_list = list(db.writing.find({"category": search}, {'_id': False}))
 
+    # else = new
     if sort == "old":
         writing_list.sort(key=lambda x: x["id"])
     elif sort == "like":
         writing_list.sort(key=lambda x: -x["like_count"])
     else:
-        #new
         writing_list.sort(key=lambda x: -x["id"])
 
     return jsonify({'writing':writing_list})
