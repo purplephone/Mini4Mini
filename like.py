@@ -1,4 +1,4 @@
-import jwt
+import jwt, json
 import datetime
 import hashlib
 from flask import Flask, render_template, jsonify, request, redirect, url_for
@@ -27,10 +27,8 @@ def like_get_all():
     try:
         # 로그인 복호화
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        print(payload)
-        # like_list = list(db.like.find({"user_id": payload['user']["username"]}, {'_id': False}))
-        like_list = list(db.like.find({},{'_id': False}))
-        print(like_list)
+        like_list = list(db.like.find({"user_id": payload['user']["username"]}, {'_id': False}))
+        # like_list = list(db.like.find({},{'_id': False}))
 
         return jsonify({'like_list': like_list})
     except jwt.ExpiredSignatureError:
@@ -51,9 +49,10 @@ def like_post():
         "user_id": request.form["user_id"],
         "writing_id": request.form["writing_id"]
     }
-    print(doc)
     db.like.delete_many(doc)
     db.like.insert_one(doc)
+    like_update(request.form["writing_id"])
+
     return jsonify({'result': 'success', 'msg': '좋아요 추가되었습니다.'})
     # token_receive = request.cookies.get('mytoken')
     # try:
@@ -76,7 +75,13 @@ def like_delete():
         "user_id": request.form["user_id"],
         "writing_id": request.form["writing_id"]
     }
-    print(doc)
     db.like.delete_many(doc)
+
+    like_update(request.form["writing_id"])
     return jsonify({'result': 'success', 'msg': '좋아요 취소되었습니다.'})
 
+
+def like_update(id):
+    like_list = list(db.like.find({"writing_id": id}, {'_id': False}))
+    db.writing.update_one({'id': int(id)}, {'$set': {'like_count': len(like_list)}})
+    return 1
