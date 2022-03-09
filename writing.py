@@ -57,7 +57,8 @@ def writing_post():
         'content': content_receive,
         'category': category_receive,
         'date': time.strftime('%m-%d %H:%M'),
-        'nickname': payload['user']['nickname']
+        'nickname': payload['user']['nickname'],
+        'like_count': 0
     }
     db.writing.insert_one(doc)
     return jsonify({'result': 'success', 'msg': '등록되었습니다.'})

@@ -20,6 +20,7 @@
         });
 
         function load_writing(mode) {
+            let like_list = like_get();
             url = `/writing/get`;
             if (mode != "") {
                 url = url + "?search=" + mode
@@ -31,8 +32,6 @@
                 success: function (response) {
                     let rows = response['writing'];
                     $('#cards-box').empty();
-
-                    let like_list = like_get();
                     {#console.log(like_list);#}
 
                     for (let i = 0; i < rows.length; i++) {
@@ -42,11 +41,12 @@
                         let category = rows[i]['category']
                         let id = rows[i]['id']
                         let date = rows[i]['date']
+                        let like_users = rows[i]['like_count'];
 
                         let tmpid = `<div class="btn-group">`;
                         let usernick = `{{ user.nickname | safe }}`;
                         let user_id = `{{ user.username | safe }}`;
-                        let like_users = like_get_fromID(id);
+
                         if (nickname == usernick) {
                             tmpid += `
                                         <form action="/writing_update" method="get">
@@ -110,7 +110,7 @@
                                             ${nickname}</small>
                                         </div>
                                         <div class="col-6">
-                                            <div class="float-end"><small class="text-muted ">likes: ${like_users.length}</small></div>
+                                            <div class="float-end"><small class="text-muted ">likes: ${like_users}</small></div>
                                         </div>
                                     </div>
                                 </p>` + tmpid +
@@ -148,7 +148,7 @@
                     $("#modalContent").append(writing['content']);
                     $("#modalTitle").text(writing['title']);
                     $("#modalDate").text(writing['date']);
-                    $("#modalNickname").text(writing['nickname']);
+                    $("#modalLikes").text("Likes: "+writing['like_count']);
                 }
             })
         }
