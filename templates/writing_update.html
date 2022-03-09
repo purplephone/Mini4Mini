@@ -143,6 +143,8 @@
             let title = $('#title').val()
             let content = $('#content').val()
             let category = $('#category option:selected').val()
+            let filelength=$('#fileInput')[0].length;
+            let file = new FormData($('#fileInput')[0]);
             {#줄바꿈 처리#}
             content = content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
 
@@ -160,11 +162,22 @@
             }else{
                 $.ajax({
                     type: 'POST',
+                    async: false,
                     url: '/update_writing',
                     data: {id_give : id, title_give: title, content_give: content, category_give: category},
                     success: function (response) {
-                        alert(response['msg'])
-                        window.location.href='/'
+                        $.ajax({
+                            type: 'POST',
+                            url: `/update_img/${id}`,
+                            data: file,
+                            contentType: false,
+                            cache: false,
+                            processData: false,
+                            success: function (response) {
+                                alert("업로드 성공");
+                                window.location.href = "/"
+                            },
+                        });
                     }
                 })
             }
@@ -219,6 +232,9 @@
                 style="height: 400px" >{{user.content}}</textarea>
             <label for="content">내용</label>
         </div>
+        <form id="fileInput" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*"/>
+        </form>
         <select id="category" class="form-select" aria-label="Default select example">
         </select>
         <button onclick="update_writing()" type="button" class="btn btn-primary">수정</button>
