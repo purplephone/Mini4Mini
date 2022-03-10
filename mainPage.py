@@ -7,14 +7,18 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 mainPage = Blueprint('mainPage_api', __name__)
 
+
+# mainPage 렌더링 요청
 @mainPage.route('/', methods=["GET"])
 def home():
+    # 로그인 중인 사용자의 토큰 값 받아오기
     token_receive = request.cookies.get('mytoken')
     try:
-        # 로그인 복호화
+        # 토큰 값 복호화
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        print(payload)
+        # Jinja2를 이용하여 사용자 정보를 담아서 렌더링
         return render_template('mainPage.html', user=payload['user'])
+    # 예외 처리
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login_api.login"))
     except jwt.exceptions.DecodeError:
