@@ -15,6 +15,12 @@ http://limjae.shop/
 * 회원가입 페이지
 ![signUpPage](https://user-images.githubusercontent.com/43942574/157579822-0e4ea9b6-0655-4e5c-927f-5c7797ddfa81.png)
 
+* 메인 페이지
+![메인페이지](https://user-images.githubusercontent.com/43942574/157593547-33b97e4c-1a5a-4f7f-be02-29f3b3bea136.png)
+
+* 작성 및 수정 페이지
+![삭제및수정페이지](https://user-images.githubusercontent.com/43942574/157593563-2453baf0-91ca-473d-976b-a75a99645159.png)
+
 
 ## 기능
 * ID, password, 닉네임, 이메일, 전화번호 입력으로 간단한 회원가입 기능
