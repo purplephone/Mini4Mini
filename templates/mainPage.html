@@ -111,7 +111,10 @@
                                             <input name="search" type="hidden" value="">
                                             {#<input name="sort" type="hidden" value="">#}
                                             <button type="button"
-                                                    class="btn btn-sm btn btn-outline-dark me-1" onclick="stop();like_delete(${id});">❤
+                                                    class="btn btn-sm btn btn-outline-dark me-1" onclick="stop();like_delete(${id});">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heartbreak-fill" viewBox="0 0 16 16">
+                                                      <path fill-rule="evenodd" d="M8.931.586 7 3l1.5 4-2 3L8 15C22.534 5.396 13.757-2.21 8.931.586ZM7.358.77 5.5 3 7 7l-1.5 3 1.815 4.537C-6.533 4.96 2.685-2.467 7.358.77Z"/>
+                                                    </svg>
                                             </button>
                                         </form>`;
                             } else {
@@ -120,7 +123,10 @@
                                             <input name="search" type="hidden" value="">
                                             {#<input name="sort" type="hidden" value="">#}
                                             <button type="button"
-                                                    class="btn btn-sm btn btn-outline-danger me-1" onclick="stop();like_post(${id});">🤍
+                                                    class="btn btn-sm btn btn-outline-danger me-1" onclick="stop();like_post(${id});">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                                      <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                                    </svg>
                                             </button>
                                         </form>`;
                             }
@@ -153,7 +159,10 @@
                                         </div>
                                         <div class="col-6">
                                             <div class="float-end"><small class="text-muted ">${category.toUpperCase()}<br>
-                                            ❤ ${like_users}</small>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                            </svg>
+                                            ${like_users}</small>
                                             </div>
                                         </div>
                                     </div>
@@ -189,7 +198,7 @@
                     $("#modalNickname").text(writing['nickname']);
                     $("#modalTitle").text(writing['title']);
                     $("#modalDate").text(writing['date']);
-                    $("#modalLikes").text("❤" + writing['like_count']);
+                    $("#modalLikes").text("Likes: " + writing['like_count']);
                     $("#modalImage").empty();
                     if (writing['file'] == "") {
                     } else {
@@ -202,12 +211,14 @@
 
         {# card 위 Edit, Delete 버튼을 눌렀을 때 해당 기능으로 넘어가기 이전에#}
         {# 글 상세 내용 보기 기능이 열리는 것을 방지#}
+
         function stop() {
             console.log("????");
             event.stopPropagation();
         }
 
         {# logout 기능, 쿠키를 지운다 #}
+
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
             alert('로그아웃!')
