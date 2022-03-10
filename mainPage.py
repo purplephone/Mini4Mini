@@ -1,18 +1,11 @@
 import jwt
 from flask import Flask, render_template, jsonify, g, Blueprint, request, redirect, url_for
+from config import SECRET_KEY, DB_LINK, CA
 
 app = Flask(__name__)
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 mainPage = Blueprint('mainPage_api', __name__)
-
-from pymongo import MongoClient
-import certifi
-
-ca = certifi.where()
-# client = MongoClient('mongodb+srv://test:sparta@cluster0.hdgtj.mongodb.net/Cluster0?retryWrites=true&w=majority',
-#                      tlsCAFile=ca)
-
-SECRET_KEY = 'SPARTA'
-
 
 @mainPage.route('/', methods=["GET"])
 def home():

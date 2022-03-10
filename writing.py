@@ -1,19 +1,17 @@
 import jwt
 import time
 from pymongo import MongoClient
-import certifi
 from flask import Flask, render_template, request, jsonify, g, Blueprint, redirect, url_for
 import os
-app = Flask(__name__)
+from config import SECRET_KEY, DB_LINK, CA
 
+app = Flask(__name__)
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 writing_api = Blueprint('writing_api', __name__)
 
-ca = certifi.where()
-client = MongoClient('mongodb+srv://test:sparta@cluster0.hdgtj.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
+client = MongoClient(DB_LINK, tlsCAFile=CA)
 db = client.dbsparta
-
-SECRET_KEY = 'SPARTA'
-
 
 @writing_api.route('/writing')
 def writing():
