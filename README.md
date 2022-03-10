@@ -38,6 +38,7 @@ http://limjae.shop/
 * bulma
 * jinja2
 * bootstrap
+* html/css
 
 #### back-end
 * flask
