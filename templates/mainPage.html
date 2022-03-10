@@ -26,7 +26,6 @@
 
         {# 글 목록을 서버에 AJAX 요청하여 글 정보를 받아오고 #}
         {# 해당 정보를 리다이렉팅 없이 렌더링 #}
-
         function load_writing(mode, sort) {
             {# 좋아요 목록 불러오기 like.html 참고 #}
             let like_list = like_get();
@@ -112,11 +111,7 @@
                                             <input name="search" type="hidden" value="">
                                             {#<input name="sort" type="hidden" value="">#}
                                             <button type="button"
-                                                    class="btn btn-sm btn btn-outline-danger me-1" onclick="stop();like_delete(${id});">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-x" viewBox="0 0 16 16">
-                                                      <path fill-rule="evenodd" d="M6.146 5.146a.5.5 0 0 1 .708 0L8 6.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 7l1.147 1.146a.5.5 0 0 1-.708.708L8 7.707 6.854 8.854a.5.5 0 1 1-.708-.708L7.293 7 6.146 5.854a.5.5 0 0 1 0-.708z"/>
-                                                      <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
-                                                    </svg>
+                                                    class="btn btn-sm btn btn-outline-dark me-1" onclick="stop();like_delete(${id});">🤍
                                             </button>
                                         </form>`;
                             } else {
@@ -124,13 +119,8 @@
                                             <input name="user_id" type="hidden" value="${user_id}">
                                             <input name="search" type="hidden" value="">
                                             {#<input name="sort" type="hidden" value="">#}
-                                            <button type="button" class="btn btn-sm btn btn-outline-success me-1" onclick="stop();like_post(${id});">
-                                            <div>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-check" viewBox="0 0 16 16">
-                                                  <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-                                                  <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
-                                                </svg>
-                                            </div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn btn-outline-danger me-1" onclick="stop();like_post(${id});">❤
                                             </button>
                                         </form>`;
                             }
@@ -163,7 +153,7 @@
                                         </div>
                                         <div class="col-6">
                                             <div class="float-end"><small class="text-muted ">${category.toUpperCase()}<br>
-                                            Bookmarks:${like_users}</small>
+                                            ❤ ${like_users}</small>
                                             </div>
                                         </div>
                                     </div>
@@ -196,10 +186,9 @@
                     {#중요함#}
                     $("#modalContent").empty();
                     $("#modalContent").append(writing['content']);
-                    $("#modalNickname").text(writing['nickname']);
                     $("#modalTitle").text(writing['title']);
                     $("#modalDate").text(writing['date']);
-                    $("#modalLikes").text("Bookmarks:" + writing['like_count']);
+                    $("#modalLikes").text("Likes: " + writing['like_count']);
                     $("#modalImage").empty();
                     if (writing['file'] == "") {
                     } else {
@@ -212,14 +201,12 @@
 
         {# card 위 Edit, Delete 버튼을 눌렀을 때 해당 기능으로 넘어가기 이전에#}
         {# 글 상세 내용 보기 기능이 열리는 것을 방지#}
-
         function stop() {
             console.log("????");
             event.stopPropagation();
         }
 
         {# logout 기능, 쿠키를 지운다 #}
-
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
             alert('로그아웃!')
@@ -297,7 +284,7 @@
                        onclick="load_writing(`like&user_id={{ user.username | safe }}`,getSort());"
                        class="nav-link link-dark"
                        aria-current="page">
-                        나의 북마크
+                        즐겨찾기
                     </a>
                 </li>
             </ul>
@@ -369,7 +356,7 @@
                         <label class="form-check-label" for="flexRadioDefault2">과거순</label>
                         <input class="form-check-input mx-2" type="radio" name="sortMode" id="flexRadioDefault3"
                                onclick="load_writing(getSearch(),`like`);">
-                        <label class="form-check-label" for="flexRadioDefault3">북마크순</label>
+                        <label class="form-check-label" for="flexRadioDefault3">좋아요순</label>
                     </div>
                 </form>
             </div>
