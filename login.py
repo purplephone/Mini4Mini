@@ -16,7 +16,6 @@ login_api = Blueprint('login_api',__name__)
 client = MongoClient(DB_LINK, tlsCAFile=CA)
 db = client.dbsparta
 
-
 @login_api.route('/login')
 def login():
     # 로그인 화면을 렌더링
