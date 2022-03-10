@@ -37,3 +37,9 @@
 * pyJWT
 * jinja2
 * certifi
+
+## Config
+```C
+  SECRET_KEY = env['SECRET_KEY']['KEY']
+  DB_LINK = env['DB_LINK']['LINK']
+```
