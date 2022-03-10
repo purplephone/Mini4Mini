@@ -38,7 +38,7 @@
 * jinja2
 * certifi
 
-## Config
+## config.ini
 ```C
   SECRET_KEY = env['SECRET_KEY']['KEY']
   DB_LINK = env['DB_LINK']['LINK']
