@@ -111,7 +111,7 @@
                                             <input name="search" type="hidden" value="">
                                             {#<input name="sort" type="hidden" value="">#}
                                             <button type="button"
-                                                    class="btn btn-sm btn btn-outline-danger me-1" onclick="stop();like_delete(${id});">UnLike
+                                                    class="btn btn-sm btn btn-outline-dark me-1" onclick="stop();like_delete(${id});">🤍
                                             </button>
                                         </form>`;
                             } else {
@@ -120,7 +120,7 @@
                                             <input name="search" type="hidden" value="">
                                             {#<input name="sort" type="hidden" value="">#}
                                             <button type="button"
-                                                    class="btn btn-sm btn btn-outline-success me-1" onclick="stop();like_post(${id});">Like
+                                                    class="btn btn-sm btn btn-outline-danger me-1" onclick="stop();like_post(${id});">❤
                                             </button>
                                         </form>`;
                             }
@@ -153,7 +153,7 @@
                                         </div>
                                         <div class="col-6">
                                             <div class="float-end"><small class="text-muted ">${category.toUpperCase()}<br>
-                                            Likes-${like_users}</small>
+                                            ❤ ${like_users}</small>
                                             </div>
                                         </div>
                                     </div>
@@ -186,9 +186,10 @@
                     {#중요함#}
                     $("#modalContent").empty();
                     $("#modalContent").append(writing['content']);
+                    $("#modalNickname").text(writing['nickname']);
                     $("#modalTitle").text(writing['title']);
                     $("#modalDate").text(writing['date']);
-                    $("#modalLikes").text("Likes: " + writing['like_count']);
+                    $("#modalLikes").text("❤" + writing['like_count']);
                     $("#modalImage").empty();
                     if (writing['file'] == "") {
                     } else {
@@ -284,7 +285,7 @@
                        onclick="load_writing(`like&user_id={{ user.username | safe }}`,getSort());"
                        class="nav-link link-dark"
                        aria-current="page">
-                        즐겨찾기
+                        내가 좋아요 누른 글
                     </a>
                 </li>
             </ul>
@@ -356,7 +357,7 @@
                         <label class="form-check-label" for="flexRadioDefault2">과거순</label>
                         <input class="form-check-input mx-2" type="radio" name="sortMode" id="flexRadioDefault3"
                                onclick="load_writing(getSearch(),`like`);">
-                        <label class="form-check-label" for="flexRadioDefault3">추천순</label>
+                        <label class="form-check-label" for="flexRadioDefault3">좋아요순</label>
                     </div>
                 </form>
             </div>

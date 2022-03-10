@@ -53,7 +53,7 @@
             {#선택한 파일#}
             let file = new FormData($('#fileInput')[0]);
 
-            {#내용 줄바꿈 처리#}
+            {#엔터키 줄바꿈 처리#}
             content = content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
 
             {#제목 없을 때 입력하라는 alert#}
