@@ -12,42 +12,58 @@
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
+    {# Jinja2를 사용하여 파일 분리 #}
+    {# 좋아요 AJAX 처리를 위한 함수  #}
     {% include 'like.html'  ignore missing %}
+    {# loadwriting()의 필터, 정렬 기능의 AJAX 처리를 위한 함수와 전역변수 #}
     {% include 'sorting.html'  ignore missing %}
 
     <script>
+        {# 로딩 시 초기값으로 글 목록 불러오기 #}
         $(document).ready(function () {
-            load_writing("","new")
+            load_writing("", "new")
         });
 
+        {# 글 목록을 서버에 AJAX 요청하여 글 정보를 받아오고 #}
+        {# 해당 정보를 리다이렉팅 없이 렌더링 #}
         function load_writing(mode, sort) {
+            {# 좋아요 목록 불러오기 like.html 참고 #}
             let like_list = like_get();
+
+            {# url과 query 전달 변수 #}
+            {# query로 전달하지 않고 data에 올려서 요청하는 것이 낫다고 생각하였는데 시간상 미처 수정하지 못했다 #}
             url = `/writing/get`;
+
+            {# 리다이렉팅하고 않고 값을 유지하기 위해 전역변수 변경 #}
             setSearch(mode);
             setSort(sort);
 
+            {# query 정보 가공 #}
             if (mode != ``) {
                 url = url + "?search=" + mode
-                if(sort != ``){
+                if (sort != ``) {
                     url = url + "&sort=" + sort
                 }
-            }
-            else{
-                if(sort != ``){
+            } else {
+                if (sort != ``) {
                     url = url + "?sort=" + sort
                 }
             }
 
+            {# /writing/get에 AJAX GET 요청 #}
             $.ajax({
                 type: 'GET',
                 url: url,
                 data: {},
                 success: function (response) {
+                    {# 글 정보 저장 #}
                     let rows = response['writing'];
+                    {# 페이지의 글 카드 초기화 #}
                     $('#cards-box').empty();
-                    {#console.log(like_list);#}
 
+                    {# 정보를 사용하여 글 카드 렌더링 #}
                     for (let i = 0; i < rows.length; i++) {
+                        {# 글 카드 정보 변수로 저장 #}
                         let title = rows[i]['title']
                         let nickname = rows[i]['nickname']
                         let content = rows[i]['content']
@@ -56,11 +72,15 @@
                         let date = rows[i]['date']
                         let like_users = rows[i]['like_count'];
                         let file = ``;
+                        {# MONGODB의 글 정보 속성 확장으로 인한 추가 검사 #}
                         if ("file" in rows[i]) {
                             file = rows[i]["file"];
                         }
 
+                        {# 사용자 id와 작성자에 따른 렌더링 html #}
+                        {# 변수명과 실제 내용이 부정확하다 #}
                         let tmpid = `<div class="btn-group">`;
+                        {# 사용자 정보 변수 #}
                         let usernick = `{{ user.nickname | safe }}`;
                         let user_id = `{{ user.username | safe }}`;
 
@@ -84,8 +104,8 @@
                                             </button>
                                         </form>`;
                         } else {
+                            {# 해당 글을 좋아요 중인지 검사 #}
                             let like_filter = like_list.filter(like => like["writing_id"] == id);
-                            {#console.log(like_filter);#}
                             if (like_filter.length > 0) {
                                 tmpid += `<form id="unlikeform${id}" method="">
                                             <input name="user_id" type="hidden" value="${user_id}">
@@ -108,14 +128,14 @@
                         }
                         tmpid += `</div>`;
 
-                        let temp_html =``;
-                        if(file ==""){
+                        {# 사진 여부에 따른 html 변경 #}
+                        let temp_html = ``;
+                        if (file == "") {
                             temp_html += `<div class="col writing-card" onclick="callingModal(${id})">
                         <div class="container card shadow-sm">
                             <img class="bi m-0 p-0 bd-placeholder-img card-img-top" width="300" height="150"
                                  fill="currentColor" src="../static/card-image.svg">`;
-                        }
-                        else{
+                        } else {
                             temp_html += `<div class="col writing-card" onclick="callingModal(${id})">
                         <div class="container card shadow-sm">
                             <img class="bi m-0 p-0 bd-placeholder-img card-img-top" width="300" height="150"
@@ -145,15 +165,11 @@
                         </div>
                     </div>`;
 
+                        {# 렌더링 변경 #}
                         $('#cards-box').append(temp_html)
                     }
                 }
             })
-        }
-
-        function test() {
-            alert("stop click");
-            event.stopPropagation();
         }
 
     </script>
@@ -176,9 +192,8 @@
                     $("#modalDate").text(writing['date']);
                     $("#modalLikes").text("Likes: " + writing['like_count']);
                     $("#modalImage").empty();
-                    if(writing['file'] == ""){
-                    }
-                    else {
+                    if (writing['file'] == "") {
+                    } else {
                         $("#modalImage").append(`<img class="img-fluid" id="modalImage" src="../static/${writing['file']}">`);
                     }
 
@@ -186,11 +201,14 @@
             })
         }
 
+        {# card 위 Edit, Delete 버튼을 눌렀을 때 해당 기능으로 넘어가기 이전에#}
+        {# 글 상세 내용 보기 기능이 열리는 것을 방지#}
         function stop() {
             console.log("????");
             event.stopPropagation();
         }
 
+        {# logout 기능, 쿠키를 지운다 #}
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
             alert('로그아웃!')
@@ -219,6 +237,7 @@
         <ul class="nav nav-pills">
             <input id="main-id" type="hidden" value="id">
 
+            {# 로그인 닉네임(아이디와 혼동 주의) 표시 #}
             <li class="nav-item mx-1">
                 <span class="fs-4">
                     {{ user.nickname }}
@@ -235,7 +254,7 @@
                     </svg>
                 </a>
             </li>
-            <!--로그아웃-->
+            <!--로그아웃 버튼-->
             <li class="nav-item mx-1">
                 <a href="/login" onclick="sign_out()" class="nav-link">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
@@ -263,7 +282,8 @@
             <hr>
             <ul class="nav nav-pills ">
                 <li class="nav-item">
-                    <a href='javascript:void(0);' onclick="load_writing(`like&user_id={{ user.username | safe }}`,getSort());"
+                    <a href='javascript:void(0);'
+                       onclick="load_writing(`like&user_id={{ user.username | safe }}`,getSort());"
                        class="nav-link link-dark"
                        aria-current="page">
                         즐겨찾기
@@ -285,13 +305,15 @@
                     </a>
                 </li>
                 <li>
-                    <a href='javascript:void(0);' onclick="load_writing(`javascript`,getSort());" class="nav-link link-dark"
+                    <a href='javascript:void(0);' onclick="load_writing(`javascript`,getSort());"
+                       class="nav-link link-dark"
                        aria-current="page">
                         JAVASCRIPT
                     </a>
                 </li>
                 <li>
-                    <a href='javascript:void(0);' onclick="load_writing(`mongodb`,getSort());" class="nav-link link-dark"
+                    <a href='javascript:void(0);' onclick="load_writing(`mongodb`,getSort());"
+                       class="nav-link link-dark"
                        aria-current="page">
                         MONGODB
                     </a>
@@ -309,7 +331,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href='javascript:void(0);' onclick="load_writing(`management`,getSort());" class="nav-link link-dark"
+                    <a href='javascript:void(0);' onclick="load_writing(`management`,getSort());"
+                       class="nav-link link-dark"
                        aria-current="page">
                         MANAGEMENT
                     </a>
@@ -352,7 +375,7 @@
     </div>
 </div>
 
-
+{# 모달 폼 html #}
 {% include 'modal.html'  ignore missing %}
 
 
