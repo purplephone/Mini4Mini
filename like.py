@@ -52,7 +52,7 @@ def like_post():
     db.like.insert_one(doc)
     like_update(request.form["writing_id"])
 
-    return jsonify({'result': 'success', 'msg': '좋아요 추가되었습니다.'})
+    return jsonify({'result': 'success', 'msg': '북마크 추가되었습니다.'})
 
 
 # 좋아요 목록 취소
@@ -67,7 +67,7 @@ def like_delete():
     db.like.delete_many(doc)
 
     like_update(request.form["writing_id"])
-    return jsonify({'result': 'success', 'msg': '좋아요 취소되었습니다.'})
+    return jsonify({'result': 'success', 'msg': '북마크 취소되었습니다.'})
 
 
 # 좋아요 변경(POST, DELETE)이 생긴 글의 좋아요 수 writing table 에 갱신

@@ -163,7 +163,7 @@
                                         </div>
                                         <div class="col-6">
                                             <div class="float-end"><small class="text-muted ">${category.toUpperCase()}<br>
-                                            Likes-${like_users}</small>
+                                            Bookmarks:${like_users}</small>
                                             </div>
                                         </div>
                                     </div>
@@ -199,7 +199,7 @@
                     $("#modalNickname").text(writing['nickname']);
                     $("#modalTitle").text(writing['title']);
                     $("#modalDate").text(writing['date']);
-                    $("#modalLikes").text("Likes: " + writing['like_count']);
+                    $("#modalLikes").text("Bookmarks:" + writing['like_count']);
                     $("#modalImage").empty();
                     if (writing['file'] == "") {
                     } else {
@@ -297,7 +297,7 @@
                        onclick="load_writing(`like&user_id={{ user.username | safe }}`,getSort());"
                        class="nav-link link-dark"
                        aria-current="page">
-                        내가 좋아요 누른 글
+                        나의 북마크
                     </a>
                 </li>
             </ul>
@@ -369,7 +369,7 @@
                         <label class="form-check-label" for="flexRadioDefault2">과거순</label>
                         <input class="form-check-input mx-2" type="radio" name="sortMode" id="flexRadioDefault3"
                                onclick="load_writing(getSearch(),`like`);">
-                        <label class="form-check-label" for="flexRadioDefault3">좋아요순</label>
+                        <label class="form-check-label" for="flexRadioDefault3">북마크순</label>
                     </div>
                 </form>
             </div>
