@@ -7,6 +7,13 @@
 
 ## 사이트 링크
 
+## 화면
+* 로그인 페이지
+![loginpage](https://user-images.githubusercontent.com/43942574/157579714-8a67fa13-a52a-4d11-bef9-2bb341cb92a0.png)
+
+* 회원가입 페이지
+![signUpPage](https://user-images.githubusercontent.com/43942574/157579822-0e4ea9b6-0655-4e5c-927f-5c7797ddfa81.png)
+
 
 ## 기능
 * ID, password, 닉네임, 이메일, 전화번호 입력으로 간단한 회원가입 기능
@@ -22,6 +29,7 @@
 * jQuery
 * bulma
 * jinja2
+* bootstrap
 
 #### back-end
 * flask
