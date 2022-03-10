@@ -1,26 +1,16 @@
-import jwt, json
-import datetime
-import hashlib
+import jwt
 from flask import Flask, render_template, jsonify, request, redirect, url_for
-from werkzeug.utils import secure_filename
-from datetime import datetime, timedelta
 from flask import Blueprint
-
-
-like_api = Blueprint('like_api',__name__)
 from pymongo import MongoClient
-import certifi
-ca = certifi.where()
-client = MongoClient('mongodb+srv://test:sparta@cluster0.hdgtj.mongodb.net/cluster0?retryWrites=true&w=majority',
-                     tlsCAFile=ca)
-db = client.dbsparta
+from config import SECRET_KEY, DB_LINK, CA
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
+like_api = Blueprint('like_api', __name__)
 
-SECRET_KEY = 'SPARTA'
-
+client = MongoClient(DB_LINK, tlsCAFile=CA)
+db = client.dbsparta
 
 @like_api.route('/like')
 def like_get_all():
@@ -55,20 +45,6 @@ def like_post():
     like_update(request.form["writing_id"])
 
     return jsonify({'result': 'success', 'msg': '좋아요 추가되었습니다.'})
-    # token_receive = request.cookies.get('mytoken')
-    # try:
-    #     # 로그인 복호화
-    #     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-
-
-
-        # return jsonify({'result': 'success', 'msg': '등록되었습니다.'})
-
-    # except jwt.ExpiredSignatureError:
-    #     return redirect(url_for("login_api.login"))
-    # except jwt.exceptions.DecodeError:
-    #     return redirect(url_for("login_api.login"))
-
 
 @like_api.route('/like', methods=["DELETE"])
 def like_delete():
