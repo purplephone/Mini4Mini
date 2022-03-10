@@ -42,29 +42,29 @@
         }
     </style>
     <script>
-        $(document).ready(function () {
-            {#load_writing()#}
-        })
-
+        {#글 추가 함수#}
         function add_writing2() {
+            {#제목#}
             let title = $('#title').val()
+            {#내용#}
             let content = $('#content').val()
+            {#선택한 카테고리#}
             let category = $('#category option:selected').val()
-            {#console.log($("#fileInput")[0]);#}
-            let filelength=$('#fileInput')[0].length;
+            {#선택한 파일#}
             let file = new FormData($('#fileInput')[0]);
-            console.log(filelength);
 
-
-            {#줄바꿈 처리#}
+            {#내용 줄바꿈 처리#}
             content = content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
 
+            {#제목 없을 때 입력하라는 alert#}
             if (title == '') {
-                alert('제목을 입력하세요')
+                alert('제목을 입력해주세요')
                 $('#title').focus()
+            {#내용 없을 때 입력하라는 alert#}
             } else if (content == '') {
-                alert('내용을 입력하세요')
+                alert('내용을 입력해주세요')
                 $('#content').focus()
+            {#카테고리 선택 안했을 때 선택하라는 alert#}
             } else if (category == 0) {
                 alert('카테고리를 선택해주세요')
                 $('#category').focus()
@@ -79,7 +79,6 @@
                         category_give: category
                     },
                     success: function (response) {
-                        alert(response['msg']);
                         $.ajax({
                             type: 'POST',
                             url: `/upload/${response['writing_id']}`,
@@ -88,7 +87,8 @@
                             cache: false,
                             processData: false,
                             success: function (response) {
-                                alert(response['msg']);
+                                alert("업로드 성공");
+                                window.location.href = "/"
                             },
                         });
                     }
@@ -96,24 +96,7 @@
             }
         }
 
-
-        function delete_writing(id) {
-            console.log(id)
-            if (confirm('삭제하시겠습니까?')) {
-                $.ajax({
-                    type: 'POST',
-                    url: '/writing/delete',
-                    data: {id_give: id},
-                    success: function (response) {
-                        console.log(response)
-                        alert(response['msg'])
-                        {#메인페이지로 이동#}
-                        window.location.href = "/"
-                    }
-                })
-            }
-        }
-
+        {#로그아웃 함수#}
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
             alert('로그아웃!')
@@ -156,15 +139,22 @@
             </li>
         </ul>
     </header>
+    {#제목#}
     <div class="form-floating mb-3">
         <input type="text" class="form-control" id="title" placeholder="url">
         <label for="title">제목</label>
     </div>
+    {#내용#}
     <div class="form-floating">
             <textarea class="form-control" placeholder="Leave a comment here" id="content"
                       style="height: 400px"></textarea>
         <label for="content">내용</label>
     </div>
+    {#파일#}
+    <form id="fileInput" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*"/>
+    </form>
+    {#카테고리#}
     <select id="category" class="form-select" aria-label="Default select example">
         <option value="0" selected>카테고리선택</option>
         <option value="html">HTML/CSS</option>
@@ -174,10 +164,6 @@
         <option value="git">GIT</option>
         <option value="management">MANAGEMENT</option>
     </select>
-
-    <form id="fileInput" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*"/>
-    </form>
 
     <button onclick="add_writing2()" type="button" class="btn btn-primary">추가</button>
 </div>
