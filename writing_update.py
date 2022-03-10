@@ -16,13 +16,14 @@ writing_update_api = Blueprint('writing_update_api', __name__)
 client = MongoClient(DB_LINK, tlsCAFile=CA)
 db = client.dbsparta
 
+# 수정하고 싶은 게시물 정보 가져오기
 @writing_update_api.route('/writing_update', methods=["GET"])
 def writing_update():
     id = request.args.get("id_give")
     user = db.writing.find_one({'id':int(id)}, {'_id': False})
     return render_template('writing_update.html', user=user)
 
-
+# 수정된 정보 db에 저장
 @writing_update_api.route('/update_writing', methods=["POST"])
 def update_writing():
     # db 저장
@@ -30,12 +31,12 @@ def update_writing():
     title_receive = request.form['title_give']
     content_receive = request.form['content_give']
     category_receive = request.form['category_give']
-    print(id_receive, title_receive, content_receive, category_receive)
     db.writing.update_one({'id': int(id_receive)}, {'$set': {'title': title_receive}})
     db.writing.update_one({'id': int(id_receive)}, {'$set': {'content': content_receive}})
     db.writing.update_one({'id': int(id_receive)}, {'$set': {'category': category_receive}})
     return jsonify({'result': 'success', 'msg': '수정되었습니다.'})
 
+# 파일 수정 시 원래 있던 파일 정보 삭제 후 새 파일 정보 db에 저장
 @writing_update_api.route('/update_img/<id>', methods=['POST'])
 def update_img(id):
     if request.method == 'POST':

@@ -12,6 +12,7 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
     <title>Mini4Mini</title>
 
     <style>
@@ -68,11 +69,12 @@
             max-width: 1200px;
         }
     </style>
+
     <script>
         $(document).ready(function (){
             update_page()
         })
-
+        {# 페이지 좌측 카테고리 클릭 시 그에 따른 페이지 보여주기#}
         function update_page(){
             tmp=``
             op = `{{user.category}}`
@@ -138,6 +140,7 @@
              $('#category').append(tmp)
         }
 
+        {#게시글 수정#}
         function update_writing() {
             let id = {{user.id}}
             let title = $('#title').val()
@@ -145,9 +148,11 @@
             let category = $('#category option:selected').val()
             let filelength=$('#fileInput')[0].length;
             let file = new FormData($('#fileInput')[0]);
+
             {#줄바꿈 처리#}
             content = content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
 
+            {#제목이나 내용이 비었거나 카테고리 선택 안 했을 시 메세지 출력#}
             if(title == ''){
                 alert('제목을 입력하세요')
                 $('#title').focus()
@@ -182,6 +187,8 @@
                 })
             }
         }
+
+        {#로그아웃 후 로그인 페이지로#}
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
             alert('로그아웃!')
@@ -189,10 +196,10 @@
         }
     </script>
 </head>
+
 <body>
     <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
                      class="bi bi-house-fill"
@@ -209,7 +216,7 @@
 
             <ul class="nav nav-pills">
                 <input id="main-id" type="hidden" value="id">
-
+                {#로그아웃 후 로그인 페이지 이동#}
                 <li class="nav-item mx-1">
                     <a href="/login" class="nav-link" onclick="sign_out">
                         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
@@ -223,6 +230,8 @@
                 </li>
             </ul>
         </header>
+
+        {#게시글 폼#}
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="title" placeholder="url" value={{user.title}}>
             <label for="title">제목</label>
