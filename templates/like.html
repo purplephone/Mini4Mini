@@ -26,7 +26,7 @@
         });
         return like_users;
     }
-
+    {#게시물 추천#}
     function like_post(writing_id){
         let formData = $(`#likeform${writing_id}`).serializeArray();
         console.log(formData);
@@ -49,7 +49,7 @@
         });
 
     }
-
+    {#추천 취소#}
     function like_delete(writing_id){
         let formData = $(`#unlikeform${writing_id}`).serializeArray();
         console.log(formData);
@@ -72,6 +72,8 @@
         });
 
     }
+
+
 
 
 

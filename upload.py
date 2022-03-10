@@ -12,24 +12,21 @@ upload_api = Blueprint('upload_api',__name__)
 client = MongoClient(DB_LINK, tlsCAFile=CA)
 db = client.dbsparta
 
-
+# 파일 업로드 페이지 렌더링
 @upload_api.route('/upload')
 def load_file():
     return render_template('upload.html')
 
-
+# 업로드 할 파일 정보 db에 저장
 @upload_api.route('/upload/<id>', methods=['POST'])
 def upload_file(id):
     if request.method == 'POST':
         f = request.files['file']
         if(f.filename == ''):
             return jsonify({'result': 'success', 'msg': '파일 업로드 성공.'})
-
-        print(f)
         extension = f.filename.split(".")[-1]
         f.filename = str(id) + "." + extension
         f.save("./static/"+secure_filename(f.filename))
-        print(f.filename)
         db.writing.update_one({'id': int(id)}, {'$set': {'file': f.filename}});
         return jsonify({'result': 'success', 'msg': '파일 업로드 성공.'})
 
